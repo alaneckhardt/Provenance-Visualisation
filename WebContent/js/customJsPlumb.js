@@ -19,8 +19,8 @@ function wheel(event){
     	var multiple = 1.5;
     	if(delta<0)
     		multiple = 1/1.5;
-		var centerX = event.pageX - $("#infovis").offset().left;
-		var centerY = event.pageY - $("#infovis").offset().top;
+		var centerX = event.pageX - $("#"+jsPlumb.canvas).offset().left;
+		var centerY = event.pageY - $("#"+jsPlumb.canvas).offset().top;
 		//Limit the zooming.
 		if((zoomLevel > 30 && multiple > 1 )||( zoomLevel < 3 && multiple < 1))
 			return;
@@ -69,26 +69,6 @@ function loadSession(sessionId){
 				layout();
 			});
 }
-
-	$(document).ready(function(){
-		if (document.getElementById("infovis").addEventListener){
-			var mousewheelevt=(/Firefox/i.test(navigator.userAgent))? "DOMMouseScroll" : "mousewheel" //FF doesn't recognize mousewheel as of FF3.x
-				 
-				if (document.getElementById("infovis").attachEvent) //if IE (and Opera depending on user setting)
-					document.getElementById("infovis").attachEvent("on"+mousewheelevt, wheel)
-				else if (document.getElementById("infovis").addEventListener) //WC3 browsers
-					document.getElementById("infovis").addEventListener(mousewheelevt, wheel, false)
-				    
-			
-		   // window.addEventListener('DOMMouseScroll', wheel, false);
-		}
-		$("#infovis").draggable({
-			stop : function() {
-				//Repaint correct position of the draggable endpoints.
-				jsPlumb.repaintEverything();
-			}
-	});
-	});
 	function initJsPlumb() { 	
 		jsPlumb.reset();
 		jsPlumb.ready(function() {	
@@ -98,7 +78,7 @@ function loadSession(sessionId){
 				};
 			jsPlumb.Defaults.Endpoint = [ "Dot", { radius:10	 }, { isSource:true, isTarget:true}];
 			jsPlumb.Defaults.MaxConnections = 10;
-			jsPlumb.Defaults.Container = $("#infovis");
+			jsPlumb.Defaults.Container = $("#"+jsPlumb.canvas);
 			
 		});
 		//loadSession(sessionId);
@@ -109,6 +89,24 @@ function loadSession(sessionId){
 		jsPlumb.draggable($(".artifact"));
 		jsPlumb.draggable($(".process"));
 		$(".artifact").draggable();
+		
+		if (document.getElementById(jsPlumb.canvas).addEventListener){
+			var mousewheelevt=(/Firefox/i.test(navigator.userAgent))? "DOMMouseScroll" : "mousewheel" //FF doesn't recognize mousewheel as of FF3.x
+				 
+				if (document.getElementById(jsPlumb.canvas).attachEvent) //if IE (and Opera depending on user setting)
+					document.getElementById(jsPlumb.canvas).attachEvent("on"+mousewheelevt, wheel)
+				else if (document.getElementById(jsPlumb.canvas).addEventListener) //WC3 browsers
+					document.getElementById(jsPlumb.canvas).addEventListener(mousewheelevt, wheel, false)
+				    
+			
+		   // window.addEventListener('DOMMouseScroll', wheel, false);
+		}
+		$("#"+jsPlumb.canvas).draggable({
+			stop : function() {
+				//Repaint correct position of the draggable endpoints.
+				jsPlumb.repaintEverything();
+			}
+	});
 	}
 	
 	/**
@@ -157,6 +155,18 @@ function loadSession(sessionId){
 		//Hack for allowing two names of edges above one another.
 		if("Used"==typeVis)
 			loc = 0.4;
+		//Switch the direction of the edge and make the label in active form
+		if("WasGeneratedBy"===typeVis ||"WasControlledBy"===typeVis){
+			var tmp = escfrom;
+			escfrom = escto;
+			escto = tmp;
+			if("WasGeneratedBy"===typeVis){
+				typeVis = "Generated";
+			}
+			else if("WasControlledBy"===typeVis){
+				typeVis = "Controlled";				
+			}			
+		}
 		//	anchor:"AutoDefault",
 		var anchors = [[0.5, 0, 0, -1], [1, 0.5, 1, 0], [0.5, 1, 0, 1], [0, 0.5, -1, 0] ];
 		var text = typeVis;
@@ -381,48 +391,7 @@ function loadSession(sessionId){
 		var y = jsPlumb.offsetY + (0.1 * h) + Math.floor(Math.random()*(0.8 * h));
 		dInner.css("top",y + 'px');
 		dInner.css("left", x + 'px');	
-
-		//Controls removed - TODO - delete commented block
-		/*var dControls = $('<div>');
-		dControls.addClass("controls");
-		dControls.append("<a href=\"#\" onclick=\"removeElement('"+node.id+"')\">Delete</a><br>");
-		dControls.append("<a href=\"#\" onclick=\"loadProvenance('"+node.id+"')\">Load provenance</a><br>");
 		
-	   
-			   
-		dControls.attr("id", getSimpleId(node.id)+"controls");
-		dInner.append(dControls);
-		//Set the onmouse events for popup of controls.
-		  // Allow mouse over of details without hiding details
-		  $(dControls).mouseover(function()
-		  {		  
-		    if (hideTimer)
-		      clearTimeout(hideTimer);
-		      dControls.css('opacity', '1');
-		      dControls.css('z-index', '2000');
-		      dInner.css('z-index', '2000');
-		  });
-		  $(dControls).mouseout(function()
-			{
-				if (hideTimer)
-				   clearTimeout(hideTimer);
-			  dControls.css('opacity', '0.5');
-			});
-		
-		  
-	
-		  $(dInner).mouseout(function()
-		  {
-		      if (hideTimer)
-		          clearTimeout(hideTimer);
-		      hideTimer = setTimeout(function()
-		      {
-		          dControls.css('display', 'none');
-		          dControls.css('z-index', '0');
-			      dInner.css('z-index', '4');
-		      }, hideDelay);
-		  });	
-		*/
 		//Popup for trigger.
 		  $(dTrigger).qtip({
 		  	    content: "Load the provenance around this node.",
@@ -572,7 +541,7 @@ function loadSession(sessionId){
 		div.css("top",$("#"+escId).css("top"));
 		div.css("z-index","1000");
 		div.html(txt);
-		$("#infovis").append(div);
+		$("#"+jsPlumb.canvas).append(div);
 		
 		
 		//Set paint style of the endpoint of the node.
@@ -592,7 +561,7 @@ function loadSession(sessionId){
 		
 		var d = getElementDiv(node);
 		var escId = getSimpleId(node.id);
-		$('#infovis').append(d);
+		$("#"+jsPlumb.canvas).append(d);
 		//Draggable endpoint.
 		setClasses(escId+" _jsPlumb_endpoint");
 		var endpoint = jsPlumb.addEndpoint(d,
