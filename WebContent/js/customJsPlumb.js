@@ -261,14 +261,19 @@ function loadSession(sessionId){
 
 	function checkExistsEdge(id, from, to){
 		var con = jsPlumb.getConnections({ source:from, target:to});
-		if(con == null)
+		if($("."+from+"."+to).size() == 0)
 			return false;
-		
-		for(var x in con){
+		var res = false;
+		$("."+from+"."+to).each(function(index,el){
+			if($(el).attr("data-id")==id)
+				res = true;
+		});
+		return res;
+		/*for(var x in con){
 			var c = con[x];			
 			if($(c.canvas).attr("data-id")==id)
 				return true;
-		}
+		}*/
 		return false;
 	}
 	
