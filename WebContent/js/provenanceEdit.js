@@ -90,7 +90,13 @@ function initProvenance() {
 		$("#ArtifactsDisableList").treeview({collapsed : true});
 		$("#AgentsDisableList").treeview({collapsed : true});
 		
-		$("#center-container").resizable({maxWidth: 945});
+		$("#center-container").resizable({
+			maxWidth: 945,
+			resize: function(event, ui) {
+				jsPlumb.width = ui.size.width-115, 
+				jsPlumb.height = ui.size.height-40;
+			}
+		});
 		
 		addAutocomplete('provenanceInputString', $("#classSelect").val(), function(e, ui) {          
 					//Empty the edit box
