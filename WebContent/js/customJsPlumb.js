@@ -156,7 +156,7 @@ function loadSession(sessionId){
 		if("Used"==typeVis)
 			loc = 0.4;
 		//Switch the direction of the edge and make the label in active form
-		if("WasGeneratedBy"===typeVis ||"WasControlledBy"===typeVis){
+		/*if("WasGeneratedBy"===typeVis ||"WasControlledBy"===typeVis){
 			var tmp = escfrom;
 			escfrom = escto;
 			escto = tmp;
@@ -166,7 +166,7 @@ function loadSession(sessionId){
 			else if("WasControlledBy"===typeVis){
 				typeVis = "Controlled";				
 			}			
-		}
+		}*/
 		//	anchor:"AutoDefault",
 		var anchors = [[0.5, 0, 0, -1], [1, 0.5, 1, 0], [0.5, 1, 0, 1], [0, 0.5, -1, 0] ];
 		var text = typeVis;
@@ -183,7 +183,7 @@ function loadSession(sessionId){
 			   [ "Label",  {
 				   			id:idTrim,
 				   			label:text, 
-				   			cssClass:"label", 
+				   			cssClass:"label "+type.substring(type.indexOf('#')+1), 
 				   			location:loc,
 				   			labelStyle:{ color : "black" } } ]
 			],
@@ -446,7 +446,7 @@ function loadSession(sessionId){
 	   //Artifact
 		else if(node.basicType == "Artifact"){
 			dInfo.click(function() {
-				window.location.href = "./artifact_new.jsp?id="+escape(getSimpleId(node.id));
+				window.location.href = "/ourspaces/artifact_new.jsp?id="+escape(getSimpleId(node.id));
 			});
 			$(dInfo).qtip({
 		  	    content: "Show details about the artifact.",
