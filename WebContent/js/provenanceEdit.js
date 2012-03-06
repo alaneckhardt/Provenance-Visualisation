@@ -144,7 +144,10 @@ function initProvenance() {
 					}
 					else{
 						var edge = edges[$(this).attr("data-edge")];
+						//Hiding canvases
 						$('[data-type="'+edge.idEdge+'"]').hide();
+						//Hiding labels of edges
+						$('.'+edge.idEdge.substring(edge.idEdge.indexOf('#')+1)).hide();
 						$('#infovis :contains("'+edge.edge+'")').hide();						
 					}
 			});
