@@ -20,7 +20,27 @@
 	var edges_counter = 0;
 	var process;
 	var sessionId = '0';
-	
+	var provConf = {
+			"linkAgent":function(node, dInfo){
+				//get the person id
+				$.get("/ourspaces/rest/person/"+getSimpleId(node.id), function(data) {
+					//Trim the data.
+					data = data.replace(/^\s+|\s+$/g, '') ;
+					var person =  eval('(' + data + ')');
+					dInfo.click(function() {
+						window.location.href = "./profile.jsp?id="+person.id;
+					});				 
+				});
+			},
+			"linkArtifact":function(node, dInfo){
+				dInfo.click(function() {
+					window.location.href = "/ourspaces/artifact_new.jsp?id="+escape(getSimpleId(node.id));
+				});
+			},
+			"linkProcess":function(node, dInfo){
+				dInfo.removeClass("info");
+			},
+	};	
 	function init(){
 		$.getScript("./js/edges.jsp", function(data, textStatus){
 				   loadProperties();

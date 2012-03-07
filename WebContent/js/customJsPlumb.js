@@ -426,28 +426,17 @@ function loadSession(sessionId){
 		
 		//Adding details at the end - we need to call ajax, which results in details being the last in the list.
 	   if(node.basicType == "Agent"){
-			//get the person id
-			$.get("/ourspaces/rest/person/"+getSimpleId(node.id), function(data) {
-				//Trim the data.
-				data = data.replace(/^\s+|\s+$/g, '') ;
-				var person =  eval('(' + data + ')');
-				dInfo.click(function() {
-					window.location.href = "./profile.jsp?id="+person.id;
-				});
-				  $(dInfo).qtip({
-				  	    content: "Show details about the person.",
-					    show:{delay:1500},
-					    hide: {delay:500,fixed: true},
-				        position: { adjust: { x: -10, y: -10 } },
-					    style: {padding: '2px', tip: { color: 'black' } }
-					});
+			$(dInfo).qtip({
+		  	    content: "Show details about the agent.",
+			    show:{delay:1500},
+			    hide: {delay:500,fixed: true},
+		        position: { adjust: { x: -10, y: -10 } },
+			    style: {padding: '2px', tip: { color: 'black' } }
 			});
+			provConf.linkAgent(node, dInfo);
 		}
 	   //Artifact
 		else if(node.basicType == "Artifact"){
-			dInfo.click(function() {
-				window.location.href = "/ourspaces/artifact_new.jsp?id="+escape(getSimpleId(node.id));
-			});
 			$(dInfo).qtip({
 		  	    content: "Show details about the artifact.",
 			    show:{delay:1500},
@@ -455,10 +444,18 @@ function loadSession(sessionId){
 		        position: { adjust: { x: -10, y: -10 } },
 			    style: {padding: '2px', tip: { color: 'black' } }
 			});
+			provConf.linkAgent(node, dInfo);
 		}
 	   //Process - do not show the link at all
 		else{
-			dInfo.removeClass("info");
+			$(dInfo).qtip({
+		  	    content: "Show details about the process.",
+			    show:{delay:1500},
+			    hide: {delay:500,fixed: true},
+		        position: { adjust: { x: -10, y: -10 } },
+			    style: {padding: '2px', tip: { color: 'black' } }
+			});
+			provConf.linkProcess(node, dInfo);
 		}
 		dIcon.attr("rel",encodeURIComponent(node.id))		
 		dIcon.addClass('icon');
