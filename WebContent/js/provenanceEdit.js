@@ -139,6 +139,7 @@ function initProvenance() {
 						//Show canvas
 						$('[data-type="'+edge.idEdge+'"]').show();
 						//Show div with label
+						$('.'+edge.idEdge.substring(edge.idEdge.indexOf('#')+1)).show();
 						$('#infovis :contains("'+edge.edge+'")').show();
 						
 					}
