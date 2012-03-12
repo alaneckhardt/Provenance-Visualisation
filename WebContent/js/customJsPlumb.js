@@ -444,7 +444,7 @@ function loadSession(sessionId){
 		        position: { adjust: { x: -10, y: -10 } },
 			    style: {padding: '2px', tip: { color: 'black' } }
 			});
-			provConf.linkAgent(node, dInfo);
+			provConf.linkArtifact(node, dInfo);
 		}
 	   //Process - do not show the link at all
 		else{
