@@ -522,8 +522,38 @@ function loadSession(sessionId){
 				}						
 				selected2 =json[id];
 				var ed = findEdges(type,dataType, edges);
-				selectedEdge = ed[0];
-				addCausalRelationship(selected1.id, selected2.id, ed[0].idEdge);
+				if(ed.length > 1){
+					var form=$("<form>").attr("id","selectEdgeForm");
+					var select = $("<select>").attr("id","selectEdge")
+					.css("width","auto")
+					.css("display","block")
+					.css("margin","0 auto");
+					var z;
+					for(z in ed){
+						var op = ed[z];
+						select.append("<option style=\"padding:3px 10px 0 0;\" value=\""+z+"\">"+getLocalName(op.idEdge)+"</option>");
+					}
+					form.append(select);
+					$(form).dialog({
+						buttons: { "Ok": function() { $(this).dialog("close"); } },
+						modal:true,
+						title:"Choose the edge type",
+						closeOnEscape:false,
+						close:function(){
+							var sel = $("#selectEdge").val();
+							selectedEdge = ed[sel];
+							addCausalRelationship(selected1.id, selected2.id, selectedEdge.idEdge);
+							form.remove();
+						},
+						focus:function(){
+							$(".ui-dialog-titlebar-close").hide();
+						}
+					});
+				}
+				else{
+					selectedEdge = ed[0];
+					addCausalRelationship(selected1.id, selected2.id, selectedEdge.idEdge);
+				}
 			}
 		});
 		$("#"+escId).addClass("hover");
