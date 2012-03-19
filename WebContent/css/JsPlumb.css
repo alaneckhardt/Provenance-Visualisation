@@ -178,15 +178,6 @@ canvas{
 }
 
 
-.shape.hover{
-    background-color: gray;
-    border: 2px dashed black;
-    color: black;
-		box-shadow: 2px 2px 19px #033;
-   -o-box-shadow: 2px 2px 19px #033;
-   -webkit-box-shadow: 2px 2px 19px #033;
-   -moz-box-shadow: 2px 2px 19px #033;
-}
 .labelDrag {
 	z-index:1000;
 	text-align: left;
@@ -333,4 +324,14 @@ canvas{
    -o-box-shadow: 2px 2px 19px #444;
    -webkit-box-shadow: 2px 2px 19px #444;
    -moz-box-shadow: 2px 2px 19px #444;
+}
+
+.shape.hover{
+    background-color: gray;
+    border: 2px dashed black;
+    color: black;
+		box-shadow: 2px 2px 19px #033;
+   -o-box-shadow: 2px 2px 19px #033;
+   -webkit-box-shadow: 2px 2px 19px #033;
+   -moz-box-shadow: 2px 2px 19px #033;
 }
