@@ -12,8 +12,8 @@
 		$(document).bind('keyup keydown', function(e){metaKey = e.metaKey} );
 	//var server = 'http://mrt.esc.abdn.ac.uk:8080/ProvenanceService/';
 	//var serverVisual = 'http://mrt.esc.abdn.ac.uk:8080/ourspaces/testProvenance/';
-	var server = 'http://localhost:8080/ProvenanceService/';
-	var serverVisual = 'http://localhost:8080/ourspaces/testProvenance/';
+	var server = '/ProvenanceService/';
+	var serverVisual = '/ourspaces/testProvenance/';
 	var process_counter = 0;
 	var agent_counter = 0;
 	var artifacts_counter = 0;
