@@ -1,51 +1,4 @@
 
-/**
- * Adds the autocomplete functionality to the specified id.
- * @param id id of edit box
- * @param range range to query - artifact, person, process, ...
- * @param select function what to do with the selected element of the form function(e, ui) { var x = ui.item.id  }
- * @param change function on change. Usually used to clear the edit box.
- */
-function addAutocomplete(id, range, select, change){		
-		//attach autocomplete  
-        $('#'+id).autocomplete({  						  
-            //define callback to format results  
-            source: function(req, add){  					
-			    if(range == null)
-			    	range = "http://openprovenance.org/ontology#Artifact";   
-                //pass request to server  
-                $.get("/ourspaces/search/quicksearch.jsp?type="+escape(range)+"&output=JSON", req, function(data) {
-					//Trim the data.
-					var data = data.replace(/^\s+|\s+$/g, '') ;				
-					var json =  eval('(' + data + ')');
-                    //create array for response objects  
-                    var suggestions = [];  
-                    //process response  
-                  	$.each(json, function(i, val){  
-                    	suggestions.push(val);  
-                		});  
-                		//pass array to callback  
-                		add(suggestions);  
-                });
-                
-        },  
-        create: function(e, ui) {  
-			$('.ui-autocomplete.ui-menu ').css("z-index","2000");
-        },
-        open: function(event, ui) { 
-			$('.ui-autocomplete.ui-menu ').css("z-index","2000");
-		},
-        //define select handler  
-        select: select,
-        close:function(e, ui) { 
-		  	//Empty the edit box
-		   	$('#'+id).val("");
-        },
-	    change : change
-     });
-        
-	
-}
 
 function hideSelected() {
 	hideType(".selected", "");
@@ -98,9 +51,40 @@ function initProvenance() {
 			}
 		});
 		
-		addAutocomplete('provenanceInputString', $("#classSelect").val(), function(e, ui) {          
-					//Empty the edit box
-					//TODO check what this is doing exactly $('#'+name).val("");
+		
+		//attach autocomplete  
+        $('#provenanceInputString').autocomplete({  						  
+            //define callback to format results  
+            source: function(req, add){  	
+            	var range = $("#classSelect").val();
+			    if(range == null)
+			    	range = "http://openprovenance.org/ontology#Artifact";   
+                //pass request to server  
+                $.get("/ourspaces/search/quicksearch.jsp?type="+escape(range)+"&output=JSON", req, function(data) {
+					//Trim the data.
+					var data = data.replace(/^\s+|\s+$/g, '') ;				
+					var json =  eval('(' + data + ')');
+                    //create array for response objects  
+                    var suggestions = [];  
+                    //process response  
+                  	$.each(json, function(i, val){  
+                    	suggestions.push(val);  
+                		});  
+                		//pass array to callback  
+                		add(suggestions);  
+                });
+                
+        },  
+        create: function(e, ui) {  
+			$('.ui-autocomplete.ui-menu ').css("z-index","2000");
+        },
+        open: function(event, ui) { 
+			$('.ui-autocomplete.ui-menu ').css("z-index","2000");
+		},
+        //define select handler  
+        select: function(e, ui) {          
+			//Empty the edit box
+			//TODO check what this is doing exactly $('#'+name).val("");
 		      //Add the resource to the graph
 		      	var query = "/ProvenanceService/ProvenanceService?action=getNode&resource="+escape(ui.item.id);
 		      	$.get(query, function(data) {
@@ -121,7 +105,12 @@ function initProvenance() {
 		      			  }
 		      		}
 		      	});	              
-		    });
+        },
+        close:function(e, ui) { 
+		  	//Empty the edit box
+		   	$('#provenanceInputString').val("");
+        }
+     });        
 
 		//Add possibility to disable edges
 		for(x in edges){
