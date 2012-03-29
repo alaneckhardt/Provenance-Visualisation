@@ -23,6 +23,8 @@
 				title = "Process "+ process_counter;
 			//Trim the data.
 			var dataTrim = data.replace(/^\s+|\s+$/g, '') ;
+			if(dataTrim.lastIndexOf('Error', 0) === 0)
+				return;
 			displayEntity(dataTrim, title, "rectangle", className);
 			process_counter++;
 		}
@@ -38,6 +40,8 @@
 				title = "Agent "+ agent_counter;		
 			//Trim the data.
 			var dataTrim = data.replace(/^\s+|\s+$/g, '') ;
+			if(dataTrim.lastIndexOf('Error', 0) === 0)
+				return;
 			displayEntity(dataTrim, title, "diamond", className);	
 			agent_counter++;	
 		}
@@ -52,6 +56,8 @@
 				title = "Artifact "+ artifacts_counter;		
 			//Trim the data.
 			var dataTrim = data.replace(/^\s+|\s+$/g, '') ;
+			if(dataTrim.lastIndexOf('Error', 0) === 0)
+				return;
 			displayEntity(dataTrim, title, "ellipse", className);	
 			artifacts_counter++;	
 		}
@@ -64,6 +70,8 @@
 		function displayNewCausalRelationship(data){
 			//Trim the data.
 			var dataTrim = data.replace(/^\s+|\s+$/g, '') ;
+			if(dataTrim.lastIndexOf('Error', 0) === 0)
+				return;
 			displayRelationship(dataTrim, selectedEdge.idEdge, selected1.id,selected2.id);
 		}
 		
