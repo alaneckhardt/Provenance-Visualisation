@@ -165,21 +165,21 @@
             }
     		return null;
     	}    	
-    	function getIndex(node, copy){
-            for (i=0;i<copy.length;i++) {
+    	function getIndex(nodeId, copy){
+            for (var i=0;i<copy.length;i++) {
                 var node2 = copy[i];
-                if(node.id == node2.id)
+                if(nodeId == node2.id)
                 	return i;
             }
             return -1;
     	}    	
-    	function getOtherIndex(edge, i){
-            var index1 = $("#"+getSimpleId(edge.from)).attr("data-node");
-            var index2 = $("#"+getSimpleId(edge.to)).attr("data-node");
-            if(index1 == i)
-            	return index2;
-            else
-            	return index1;
+    	function getOtherIndex(edge, copy, nodeId){
+            //var index1 = $("#"+getSimpleId(edge.from)).attr("data-node");
+            //var index2 = $("#"+getSimpleId(edge.to)).attr("data-node");
+    		if(nodeId == edge.from)
+    			return getIndex(edge.to, copy);
+    		else
+    			return getIndex(edge.from, copy);
     	}
     	Math.seedrandom(seed);
         var i = 0;
@@ -203,7 +203,7 @@
             var node = copy[i];
             node.layoutPosY = 0;//Math.random();
         }
-        var lastT=0, lastIndex=0, counter = 0, maxY = 0, countNulls = 0;
+        var lastT=-1, lastIndex=-1, counter = 0, maxY = 0, countNulls = 0;
         //Sort according to the timestamp
         for (i=0;i<copy.length;i++) {
             var node = copy[i];
@@ -252,6 +252,46 @@
         }
         //Position those without timestamp
         var tmp = 0;
+        // Find the average position of the end of the edges
+        for (var i=0;i<copy.length;i++) {
+            var node = copy[i];
+            var t = getTimestamp(node);
+            if(t == null || node.basicType == "Agent"){
+            	var avgX = 0, divider = 0;
+    	        for (var j = 0; j <  node.adjacencies.length; j++) {
+    	            var edge = node.adjacencies[j];
+    	            var index = getOtherIndex(edge, copy, node.id);
+    	            
+    	            if(index == -1 || !testVisible(copy[index]))
+    	            	continue;
+    	            avgX+=copy[index].layoutPosX;
+    	            divider++;
+    	        }
+    	        avgX /= divider;
+            	node.layoutPosX = avgX;
+            	node.layoutPosY = maxY*1.5;
+            }
+        }
+
+        copy.sort( function (a,b) { 
+        	var t1,t2;
+        	t1 = a.layoutPosX;
+        	t2 = b.layoutPosX;        	
+        	return t1>t2; }
+        ); 
+        
+        //Split nodes with same x position
+        var lastX = 0;
+        var inc = 0;
+        for (var i=0;i<copy.length;i++) {
+            var node = copy[i];
+            var t = getTimestamp(node);
+            if(t == null || node.basicType == "Agent"){
+            	lastX++;
+        		node.layoutPosX = lastX*lastIndex/countNulls;     	
+            }
+        }
+        /*
         for (i=0;i<copy.length;i++) {
             var node = copy[i];
             var t = getTimestamp(node);
@@ -261,7 +301,7 @@
             	tmp++;
             	
             }
-        }
+        }*/
         /*for (i in json) {
             var node = json[i];
             if(!testVisible(node))

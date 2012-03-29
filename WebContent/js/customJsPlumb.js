@@ -250,13 +250,15 @@ function loadSession(sessionId){
 		return res;
 	}
 	
+	/**
+	 * Checks if the node exists on the canvas or not.
+	 * @param id
+	 * @returns {Boolean}
+	 */
 	function checkExists(id){
-		for(var x in json){
-			var o = json[x];
-			if(id == o.id)
-				return true;
-		}
-		return false;
+		if($("#"+getLocalName(id)).size() == 0)
+			return false;
+		return true;
 	}
 
 	function checkExistsEdge(id, from, to){
@@ -337,18 +339,40 @@ function loadSession(sessionId){
 	    $("._jsPlumb_overlay.label").css('font-size', newFontSize);	    
 	}
 	
+	function addEdge(edge, id){
+		var node2 = findNode(id);
+		var found = false;
+		for(var z in node2.adjacencies){
+			var edge2 = node2.adjacencies[z];
+			if(edge.id == edge2.id){
+				found == true;
+				break;
+			}							
+		}
+		if(!found){
+			node2.adjacencies.push(edge);
+		}
+	}
+	
 	function loadProvenance(res){
 		var query = serverVisual+"getProvenance.jsp?entity="+escape(res);
 		$.get(query, function(data) {
 			//Trim the data.
 			var data = data.replace(/^\s+|\s+$/g, '') ;
 			var graph =  eval('(' + data + ')');
+			//TODO - merge the edges!!!!
+			var x;
 			for(x in graph){
 				var node = graph[x];
 				try{
-					var d = createElement(node);
-					if(d!=null)
-						shrinkDiv(d, zoomLevel/10, jsPlumb.offsetX+jsPlumb.width/2, jsPlumb.offsetY+jsPlumb.height/2);
+					var node2 = findNode(node.id);
+					//Append the new node to the list of nodes.
+					if(node2 == null){
+						json.push(node);
+						var d = createElement(node);
+						if(d!=null)
+							shrinkDiv(d, zoomLevel/10, jsPlumb.offsetX+jsPlumb.width/2, jsPlumb.offsetY+jsPlumb.height/2);
+					}
 				}
 				catch(err)
 				  {
@@ -357,7 +381,13 @@ function loadSession(sessionId){
 			}
 			for(x in graph){
 				var node = graph[x];
-				for(y in node.adjacencies){
+				for(var y in node.adjacencies){
+					var adj = node.adjacencies[y];
+					addEdge(adj, adj.to);
+					addEdge(adj, adj.from);
+				}
+				
+				for(var y in node.adjacencies){
 					var adj = node.adjacencies[y];		
 					displayRelationship(adj.id,adj.type, adj.from, adj.to);
 				}
@@ -675,12 +705,10 @@ function loadSession(sessionId){
 		d.attr("data-title",node.title);
 		d.attr("data-id",node.id);
 		d.attr("data-fullType",node.fullType);
-		d.attr("data-node",json.length);
+		d.attr("data-node",json.length-1);
 		
 		//Hide it for the start - it will appear when hover above the element.
 		//$(endpoint.canvas).hide();
-		//Append the new node to the list of nodes.
-		json[json.length] = node;
 		node.el = d;
 		//If not editable, hide the editing things.
 		if(provenanceEditable == false){
@@ -708,6 +736,15 @@ function loadSession(sessionId){
 
 	function showEditing(){
 		json = jsonBackup;
+	}
+	
+	function findNode(nodeId){
+		for(var x in json){
+			var node = json[x];
+			if(node.id == nodeId)
+				return node;
+		}
+		return null;
 	}
 	
 	function collapseEditing(){
