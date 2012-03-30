@@ -53,7 +53,7 @@ function loadSession(sessionId){
 		var query = server+"ProvenanceService?action=getGraph&session="+sessionId;
 			$.get(query, function(data) {
 				//Trim the data.
-				var data = data.replace(/^\s+|\s+$/g, '') ;
+				data = data.replace(/^\s+|\s+$/g, '') ;
 				var graph =  eval('(' + data + ')');
 				for(x in graph){
 					var node = graph[x];
@@ -91,12 +91,12 @@ function loadSession(sessionId){
 		$(".artifact").draggable();
 		
 		if (document.getElementById(jsPlumb.canvas).addEventListener){
-			var mousewheelevt=(/Firefox/i.test(navigator.userAgent))? "DOMMouseScroll" : "mousewheel" //FF doesn't recognize mousewheel as of FF3.x
+			var mousewheelevt=(/Firefox/i.test(navigator.userAgent))? "DOMMouseScroll" : "mousewheel"; //FF doesn't recognize mousewheel as of FF3.x
 				 
 				if (document.getElementById(jsPlumb.canvas).attachEvent) //if IE (and Opera depending on user setting)
-					document.getElementById(jsPlumb.canvas).attachEvent("on"+mousewheelevt, wheel)
+					document.getElementById(jsPlumb.canvas).attachEvent("on"+mousewheelevt, wheel);
 				else if (document.getElementById(jsPlumb.canvas).addEventListener) //WC3 browsers
-					document.getElementById(jsPlumb.canvas).addEventListener(mousewheelevt, wheel, false)
+					document.getElementById(jsPlumb.canvas).addEventListener(mousewheelevt, wheel, false);
 				    
 			
 		   // window.addEventListener('DOMMouseScroll', wheel, false);
@@ -224,16 +224,15 @@ function loadSession(sessionId){
 		if (r==true)
 		{
 			removeCausalRelationship(id);
-			var c = jsPlumb.getConnections({source:sourceId,target:targetId});  
+			//var c = jsPlumb.getConnections({source:sourceId,target:targetId});  
 			jsPlumb.detach(sourceId, targetId);
 		}
 	}
 
 	
 	function findEdges(cause, effect, edgesIn){
-		var x;
 		var res = [];		
-		for(x in edgesIn){
+		for(var x in edgesIn){
 			var edge = edges[x];
 			if(effect == null && (edge.causeAllValuesFrom==cause || (superclasses[cause] != null && $.inArray(edge.causeAllValuesFrom, superclasses[cause]) != -1) )){
 				res.push(edge);
@@ -262,21 +261,20 @@ function loadSession(sessionId){
 	}
 
 	function checkExistsEdge(id, from, to){
-		var con = jsPlumb.getConnections({ source:from, target:to});
+		//var con = jsPlumb.getConnections({ source:from, target:to});
 		if($("."+from+"."+to).size() == 0)
 			return false;
-		var res = false;
 		$("."+from+"."+to).each(function(index,el){
 			if($(el).attr("data-id")==id)
-				res = true;
+				return true;
 		});
-		return res;
+		return false;
 		/*for(var x in con){
 			var c = con[x];			
 			if($(c.canvas).attr("data-id")==id)
 				return true;
-		}*/
-		return false;
+		}
+		return false;*/
 	}
 	
 	/**
@@ -333,8 +331,8 @@ function loadSession(sessionId){
 	 * */
 	function shrinkEdges(){
 		// Change font size
-	    var currentFontSize = $("._jsPlumb_overlay.label").css('font-size');
-	    var currentFontSizeNum = parseFloat(currentFontSize, 10);
+	    //var currentFontSize = $("._jsPlumb_overlay.label").css('font-size');
+	    //var currentFontSizeNum = parseFloat(currentFontSize, 10);
 	    var newFontSize = 14*zoomLevel/10;
 	    $("._jsPlumb_overlay.label").css('font-size', newFontSize);	    
 	}
@@ -358,11 +356,10 @@ function loadSession(sessionId){
 		var query = serverVisual+"getProvenance.jsp?entity="+escape(res);
 		$.get(query, function(data) {
 			//Trim the data.
-			var data = data.replace(/^\s+|\s+$/g, '') ;
+			data = data.replace(/^\s+|\s+$/g, '') ;
 			var graph =  eval('(' + data + ')');
 			//TODO - merge the edges!!!!
-			var x;
-			for(x in graph){
+			for(var x in graph){
 				var node = graph[x];
 				try{
 					var node2 = findNode(node.id);
@@ -487,7 +484,7 @@ function loadSession(sessionId){
 			});
 			provConf.linkProcess(node, dInfo);
 		}
-		dIcon.attr("rel",encodeURIComponent(node.id))		
+		dIcon.attr("rel",encodeURIComponent(node.id));
 		dIcon.addClass('icon');
 		//Do not allow provenance of Agents, there's too much
 		if(node.basicType != "Agent"){
@@ -497,12 +494,8 @@ function loadSession(sessionId){
 		dInner.append(dInfo);	
 		
 
-		var hideTimer = null;
+		/*var hideTimer = null;
 		var hideDelay = 500;
-
-		
-			  
-			 /* 
 			 dTrigger.hide();	
 			 $(dInner).mouseover(function()
 			  {
@@ -534,7 +527,7 @@ function loadSession(sessionId){
 	function enable(edge, obj, type){
 		//enable dragging
 		//var uuid = $("#"+obj.id).attr("data-endpoint");
-		var edgeName = edge.edge;
+		//var edgeName = edge.edge;
 		var escId = getSimpleId(obj.id);
 		$("#"+escId+" p").droppable({
 			scope: jsPlumb.Defaults.Scope,
@@ -558,8 +551,7 @@ function loadSession(sessionId){
 					.css("width","auto")
 					.css("display","block")
 					.css("margin","0 auto");
-					var z;
-					for(z in ed){
+					for(var z in ed){
 						var op = ed[z];
 						select.append("<option style=\"padding:3px 10px 0 0;\" value=\""+z+"\">"+getLocalName(op.idEdge)+"</option>");
 					}
@@ -590,8 +582,7 @@ function loadSession(sessionId){
 		//Display the names of edges next to the node
 		var txt = "";
 		var edgesToDisplay = findEdges(type,$("#"+escId).attr("data-fullType"), edges);
-		var z;
-		for(z in edgesToDisplay){
+		for(var z in edgesToDisplay){
 			txt += edgesToDisplay[z].edge+",";
 		}
 		//Strip the last ','
@@ -649,13 +640,11 @@ function loadSession(sessionId){
 					selected1 = json[$("#"+this.attributes.elid.value).attr("data-node")];
 					var type = $("#"+this.attributes.elid.value).attr("data-fullType");
 					var ed = findEdges(type,null, edges);
-					var x;
-					for(x in ed){
+					for(var x in ed){
 						var edge = ed[x];
 						var range = edge.effectAllValuesFrom;
 						//TODO list all the nodes and check the range and the type of the node.
-						var y;
-						for(y in json){
+						for(var y in json){
 							var obj = json[y];
 							//Skip the actual object
 							if(obj == selected1)
@@ -675,8 +664,7 @@ function loadSession(sessionId){
 					},
 					stop:function(e, ui) {
 						//Erase all stylings
-						var y;
-						for(y in json){
+						for(var y in json){
 							var obj = json[y];
 							var endpoint = jsPlumb.getEndpoint("end-"+getSimpleId(obj.id));
 							endpoint.setPaintStyle({fillStyle:"#aaa", radius:zoomLevel});
@@ -746,7 +734,7 @@ function loadSession(sessionId){
 		}
 		return null;
 	}
-	
+	/*
 	function collapseEditing(){
 		//TODO finish collapsing and showing
 		function getOrigin(node){
@@ -782,4 +770,4 @@ function loadSession(sessionId){
 		}
 
 
-	}
+	}*/

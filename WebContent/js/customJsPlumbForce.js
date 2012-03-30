@@ -46,7 +46,7 @@ function getIndex(url) {
 }
 
 force = function() {
-	var force = {}, event = dispatch("tick"), size = [ 1, 1 ], drag, alpha, friction = .9, linkDistance = d3_layout_forceLinkDistance, linkStrength = d3_layout_forceLinkStrength, charge = -30, gravity = .1, theta = .8, interval, nodes = [], links = [], distances, strengths, charges;
+	var force = {}, event = dispatch("tick"), size = [ 1, 1 ], drag = false, alpha = 0, friction = .9, linkDistance = d3_layout_forceLinkDistance, linkStrength = d3_layout_forceLinkStrength, charge = -30, gravity = .1, theta = .8, interval, nodes = [], links = [], distances = [], strengths = [], charges  = [];
 
 	function repulse(node) {
 		return function(quad, x1, y1, x2, y2) {
@@ -197,7 +197,7 @@ force = function() {
 		return force;
 	};
 	force.start = function() {
-		var i, j, n = nodes.length, m = links.length, w = size[0], h = size[1], neighbors, o;
+		var i, j, n = nodes.length, m = links.length, w = size[0], h = size[1], neighbors = [], o;
 		for (i = 0; i < n; ++i) {
 			(o = nodes[i]).index = i;
 			o.weight = 0;
@@ -404,7 +404,7 @@ partition = function() {
 		node.dx = dx;
 		node.dy = dy;
 		if (children && (n = children.length)) {
-			var i = -1, n, c, d;
+			var i = -1, n = children.length, c, d;
 			dx = node.value ? dx / node.value : 0;
 			while (++i < n) {
 				position(c = children[i], x, d = c.value * dx, dy);
@@ -415,7 +415,7 @@ partition = function() {
 	function depth(node) {
 		var children = node.children, d = 0;
 		if (children && (n = children.length)) {
-			var i = -1, n;
+			var i = -1, n = children.length;
 			while (++i < n)
 				d = Math.max(d, depth(children[i]));
 		}
@@ -473,7 +473,7 @@ timer = function(callback, delay, then) {
 		d3_timer_interval = 1;
 		d3_timer_frame(d3_timer_step);
 	}
-}
+};
 function d3_timer_step() {
 	var elapsed, now = Date.now(), t1 = d3_timer_queue;
 	while (t1) {

@@ -1,44 +1,38 @@
-<%@ page language="java" import="provenanceService.*, java.util.Iterator,java.util.*,java.net.*,java.text.SimpleDateFormat,java.util.ArrayList,java.io.*,java.net.*,java.util.Vector" contentType="text/html; charset=ISO-8859-1"
+<%@ page language="java" import="provenanceService.ParameterHelper,provenanceService.*, com.hp.hpl.jena.ontology.*,java.util.Iterator,java.util.*,java.net.*,java.text.SimpleDateFormat,java.util.ArrayList,java.io.*,java.net.*,java.util.Vector" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<% ParameterHelper.setSess(session); 
-	ParameterHelper.setReq(request);
+<% 
+ParameterHelper parHelp = new ParameterHelper(request, session);
 
-	String className = (String)ParameterHelper.getParameter("className",  "http://openprovenance.org/ontology#Process");	
+	String className = (String)parHelp.getParameter("className",  "http://openprovenance.org/ontology#Process");	
 %>
-function loadSuperclasses<%=className.substring(className.indexOf('#')+1) %>(){
+function loadSuperclasses<%=Utility.getLocalName(className) %>(){
 	<%
+	//Get all subclasses
 	Vector<String> subClasses = RDFProvider.getSubclasses( className);
+	//Writing all superclasses of all subclasses of given class (e.g. of JournalPaper, when given Artifact)
 	for(int i=0;i<subClasses.size();i++){
 		String subClass = subClasses.get(i);
+
+		//Get all superclasses of the subclass (Paper, Artifact, Node,...)
+		Vector<String> superClasses = RDFProvider.getSuperclasses( subClass);
+%>
+		superclasses['<%=subClass%>']= [];
+		<%
+		//Write them out.
+	for(int j=0;j<superClasses.size();j++){
+					String superClass = superClasses.get(j);
+					if(superClass == null || superClass.length() == 0)
+						continue;
+					%>superclasses['<%=subClass%>'].push('<%=superClass%>');<%
+	}
 		
-		Vector<String> superClasses = RDFProvider.getSuperclasses( subClass);
-%>
-		superclasses['<%=subClass%>']= [];
-		<%
-	for(int j=0;j<superClasses.size();j++){
-	String superClass = superClasses.get(j);
-	if(superClass == null || superClass.length() == 0)
-		continue;
-%>superclasses['<%=subClass%>'][superclasses['<%=subClass%>'].length] = '<%=superClass%>';
-			<%
-	}
-		subClasses.addAll(RDFProvider.getSubclasses( subClass));
-	}
-	subClasses = RDFProvider.getSubclasses( className);
-	for(int i=0;i<subClasses.size();i++){
-		String subClass = subClasses.get(i);
-		Vector<String> superClasses = RDFProvider.getSuperclasses( subClass);
-%>
-		superclasses['<%=subClass%>']= [];
-		<%
-	for(int j=0;j<superClasses.size();j++){
-	String superClass = superClasses.get(j);
-	if(superClass == null || superClass.length() == 0)
-		continue;
-%>superclasses['<%=subClass%>'][superclasses['<%=subClass%>'].length] = '<%=superClass%>';
-			<%
-	}
-		subClasses.addAll(RDFProvider.getSubclasses( subClass));
+		Vector<String> subClassesTemp = RDFProvider.getSubclasses( subClass);
+		for(int j=0;j<subClassesTemp.size();j++){
+			String s = subClassesTemp.get(j);
+			if(s.equals(className) || superClasses.contains(s) || subClasses.contains(s))
+				continue;
+			subClasses.add(s);
+		}
 	}
 %>
 }

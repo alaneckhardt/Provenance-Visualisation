@@ -1,23 +1,29 @@
-<%@ page language="java" import="provenanceService.*,java.util.Iterator,java.util.*,java.net.*,java.text.SimpleDateFormat,java.util.ArrayList,java.io.*,java.net.*,java.util.Vector" contentType="text/html; charset=ISO-8859-1"
+<%@ page language="java" import="provenanceService.ParameterHelper,provenanceService.*,com.hp.hpl.jena.ontology.*,java.util.Iterator,java.util.*,java.net.*,java.text.SimpleDateFormat,java.util.ArrayList,java.io.*,java.net.*,java.util.Vector" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <% 
-  ParameterHelper.setSess(session); 
-	ParameterHelper.setReq(request);
+ParameterHelper parHelp = new ParameterHelper(request, session);
 
-	String includeFirst = (String)ParameterHelper.getParameter("includeFirst",  "");
-	String liClass = (String)ParameterHelper.getParameter("liClass",  "");
-	String liStyle = (String)ParameterHelper.getParameter("liStyle",  "");
-	String ulClass = (String)ParameterHelper.getParameter("ulClass",  "");
-	String ulStyle = (String)ParameterHelper.getParameter("ulStyle",  "");
-	String ulId = (String)ParameterHelper.getParameter("ulId",  "");
-	String onClick = (String)ParameterHelper.getParameter("onClick",  "");
-	String innerUlStyle = (String)ParameterHelper.getParameter("innerUlStyle",  "padding-left:15px");
-	String ontologies = (String)ParameterHelper.getParameter("ontologies",  "general");
+	String includeFirst = (String)parHelp.getParameter("includeFirst",  "");
+	String liClass = (String)parHelp.getParameter("liClass",  "");
+	String liStyle = (String)parHelp.getParameter("liStyle",  "");
+	String ulClass = (String)parHelp.getParameter("ulClass",  "");
+	String ulStyle = (String)parHelp.getParameter("ulStyle",  "");
+	String ulId = (String)parHelp.getParameter("ulId",  "");
+	String onClick = (String)parHelp.getParameter("onClick",  "");
+	String innerUlStyle = (String)parHelp.getParameter("innerUlStyle",  "padding-left:15px");
+	String ontologies = (String)parHelp.getParameter("ontologies",  "general");
 	String[] labels = ontologies.split("#");
-	String className = (String)ParameterHelper.getParameter("className",  "http://openprovenance.org/ontology#Process");
+	String className = (String)parHelp.getParameter("className",  "http://openprovenance.org/ontology#Process");
 	
 	Vector<String> subClasses = new Vector<String>();
-	subClasses.addAll(RDFProvider.getSubclasses(className));
+
+	if("true".equals(includeFirst)){
+		subClasses.add(className);
+	}
+	else{
+		subClasses.addAll(RDFProvider.getSubclasses(className));	
+	}
+	
 %>
 <%!	//Function for recursive loading the ontology tree.
     // There is a lot of parameters, but unfortunatelly, the method doesn't see the jsp variables.
@@ -55,10 +61,6 @@
 %>
 		<ul id="<%=ulId%>" style="<%=ulStyle%>">
 		<% 
-		if("true".equals(includeFirst)){
-			%><li style="<%=liStyle%>" class="<%=liClass%>" data-class="<%=className%>" rel="resource"><a href="#" onClick="<%=onClick.replaceAll("#className", className.substring(className.indexOf('#')+1))%>" ><%=className.substring(className.indexOf('#')+1) %></a><br/></li>
-			<%
-		}
 				for(String subClass : subClasses){
 					String content = loadTree("", subClass,  liClass, liStyle, onClick, ulClass, ulStyle, innerUlStyle,labels);%>
 					<%=content %>

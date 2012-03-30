@@ -7,9 +7,9 @@
 		ctrlKey = false;
 		shiftKey = false;
 		metaKey = false;
-		$(document).bind('keyup keydown', function(e){ctrlKey = e.ctrlKey} );
-		$(document).bind('keyup keydown', function(e){shiftKey = e.shiftKey} );
-		$(document).bind('keyup keydown', function(e){metaKey = e.metaKey} );
+		$(document).bind('keyup keydown', function(e){ctrlKey = e.ctrlKey;} );
+		$(document).bind('keyup keydown', function(e){shiftKey = e.shiftKey;} );
+		$(document).bind('keyup keydown', function(e){metaKey = e.metaKey;} );
 	//var server = 'http://mrt.esc.abdn.ac.uk:8080/ProvenanceService/';
 	//var serverVisual = 'http://mrt.esc.abdn.ac.uk:8080/ourspaces/testProvenance/';
 	var server = '/ProvenanceService/';
@@ -56,12 +56,9 @@
 						$.getScript("./getSuperclasses.jsp?className=http://openprovenance.org/ontology%23Process", function(data, textStatus){
 							   loadSuperclassesProcess();
 							   //Now fill the subclasses.
-							   var x,y;
-							   for(x in superclasses){
-								   var subclass = x;
+							   for(var x in superclasses){
 								   var xsuperclasses = superclasses[x];
-								   for(y in superclasses){
-									   var superclass = y;
+								   for(var y in xsuperclasses){
 									   if(subclasses[y] == null){
 										   subclasses[y] = [];
 									   }

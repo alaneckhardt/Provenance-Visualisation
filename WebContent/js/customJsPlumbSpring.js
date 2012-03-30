@@ -251,8 +251,7 @@
             }
         }
         //Position those without timestamp
-        var tmp = 0;
-        // Find the average position of the end of the edges
+        // 1) Find the average position of the end of the edges
         for (var i=0;i<copy.length;i++) {
             var node = copy[i];
             var t = getTimestamp(node);
@@ -280,9 +279,8 @@
         	return t1>t2; }
         ); 
         
-        //Split nodes with same x position
+        //2) Split nodes with same x position
         var lastX = 0;
-        var inc = 0;
         for (var i=0;i<copy.length;i++) {
             var node = copy[i];
             var t = getTimestamp(node);

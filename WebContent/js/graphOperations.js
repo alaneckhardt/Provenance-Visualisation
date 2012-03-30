@@ -119,7 +119,7 @@
 			
 			$.get(query, function(data){
 				//Trim the data.
-				var data = data.replace(/^\s+|\s+$/g, '') ;
+				data = data.replace(/^\s+|\s+$/g, '') ;
 				displayProcess(data, title, className);
 				query = server+'ProvenanceService?action=addTitle&session='+escape(data)+'&object='+escape(data)+'&title='+escape(title);
 				$.get(query, function(data){
@@ -140,7 +140,7 @@
 			}
 			$.get(query, function(data){
 				//Trim the data.
-				var data = data.replace(/^\s+|\s+$/g, '') ;
+				data = data.replace(/^\s+|\s+$/g, '') ;
 				displayAgent(data, title, className);
 				query = server+'ProvenanceService?action=addTitle&session='+escape(sessionId)+'&object='+escape(data)+'&title='+escape(title);
 				$.get(query,function(data){
@@ -160,7 +160,7 @@
 			}
 			$.get(query, function(data){
 				//Trim the data.
-				var data = data.replace(/^\s+|\s+$/g, '') ;
+				data = data.replace(/^\s+|\s+$/g, '') ;
 				displayArtifact(data, title, className);
 				query = server+'ProvenanceService?action=addTitle&session='+escape(sessionId)+'&object='+escape(data)+'&title='+escape(title);
 				$.get(query,function(data){
@@ -226,7 +226,7 @@
 			var query = server+"ProvenanceService?action=startSession";
 			$.get(query, function(data) {
 				//Trim the data.
-				var data = data.replace(/^\s+|\s+$/g, '');
+				data = data.replace(/^\s+|\s+$/g, '');
 				sessionId = data;			
 			});
 			
@@ -240,7 +240,7 @@
 			var query = server+"ProvenanceService?action=removeCausalRelationShip&session="+escape(sessionId)+"&relation="+escape(relation);
 			$.get(query, function(data) {
 				//Trim the data.
-				var data = data.replace(/^\s+|\s+$/g, '');
+				data = data.replace(/^\s+|\s+$/g, '');
 			});			
 		}
 
@@ -251,7 +251,7 @@
 			var query = server+"ProvenanceService?action=removeNode&session="+escape(sessionId)+"&node="+escape(node);
 			$.get(query, function(data) {
 				//Trim the data.
-				var data = data.replace(/^\s+|\s+$/g, '');
+				data = data.replace(/^\s+|\s+$/g, '');
 			});			
 		}
 		

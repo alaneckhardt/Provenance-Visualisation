@@ -9,7 +9,7 @@ function showAll(){
 
 function initProvenance() { 
 
-	   loadProperties();
+	loadProperties();
 	   loadSuperclassesProcess();
 	   loadSuperclassesArtifact();
 	   loadSuperclassesAgent();
@@ -18,7 +18,7 @@ function initProvenance() {
 	   for(x in superclasses){
 		   var subclass = x;
 		   var xsuperclasses = superclasses[x];
-		   for(y in superclasses){
+		   for(y in xsuperclasses){
 			   var superclass = y;
 			   if(subclasses[y] == null){
 				   subclasses[y] = [];
@@ -62,7 +62,7 @@ function initProvenance() {
                 //pass request to server  
                 $.get("/ourspaces/search/quicksearch.jsp?type="+escape(range)+"&output=JSON", req, function(data) {
 					//Trim the data.
-					var data = data.replace(/^\s+|\s+$/g, '') ;				
+					data = data.replace(/^\s+|\s+$/g, '') ;				
 					var json =  eval('(' + data + ')');
                     //create array for response objects  
                     var suggestions = [];  
@@ -89,7 +89,7 @@ function initProvenance() {
 		      	var query = "/ProvenanceService/ProvenanceService?action=getNode&resource="+escape(ui.item.id);
 		      	$.get(query, function(data) {
 		      		//Trim the data.
-		      		var data = data.replace(/^\s+|\s+$/g, '') ;
+		      		data = data.replace(/^\s+|\s+$/g, '') ;
 		      		graph =  eval('(' + data + ')');
 		      		for(x in graph){
 		      			var node = graph[x];
@@ -148,10 +148,13 @@ function initProvenance() {
 
 		$("#ProcessesDisableList li,#ArtifactsDisableList li,#AgentsDisableList li ").each(function(index) {
 			//Only one checkbox.
-			if($(this).children("a").children("input").html() == null){
+			if($(this).children("a").siblings("input").html() == null){
 				var check = $("<input>");
 				check.attr("type","checkbox");
 				check.attr("checked","checked");
+				check.click(function(){
+					uncheck(this);
+				});
 				//No need to have click event - all is done in the parent "a href". See hideType reference.
 			  /*check.click(function() {
 				  var selector = '[data-fulltype="'+$(this.parentNode.parentNode).attr("data-class")+'"]';
@@ -159,7 +162,7 @@ function initProvenance() {
 					hideType(selector, checked);
 			  });*/
 			  //Append the checkbox just after the link.
-				$(this).children("a").append(check);
+				$(this).children("a").after(check);
 			}
 		});
 		
@@ -193,7 +196,9 @@ function initProvenance() {
 	}
 	
 	function uncheck(el){
-		var ch = $(el).children('input'); 
+		var ch = $(el).siblings('input'); 
+		if(ch == null)
+			ch = $(el);
 		if(ch.attr('checked')=='checked') {
 			ch.removeAttr('checked');
 		}
@@ -214,4 +219,6 @@ function initProvenance() {
 			//Delete the type from the array.
 			disabledTypes.splice(index,1);
 		}
+		//Do the same for children types.
+		$(el).parent().children("ul").children().children("a").click();
 	}
