@@ -264,6 +264,8 @@ function loadSession(sessionId){
 		//var con = jsPlumb.getConnections({ source:from, target:to});
 		if($("."+from+"."+to).size() == 0)
 			return false;
+		if($("."+from+"."+to+"[data-id='"+id+"']").size()>0)
+			return true;
 		$("."+from+"."+to).each(function(index,el){
 			if($(el).attr("data-id")==id)
 				return true;
