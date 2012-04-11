@@ -361,6 +361,11 @@
     function resize(){
         var minx = Infinity, maxx = -Infinity, miny = Infinity, maxy = -Infinity;
 
+		$("#"+jsPlumb.canvas).css("left",-jsPlumb.offsetX+"px");
+		$("#"+jsPlumb.canvas).css("top",-jsPlumb.offsetY+"px");
+		//jsPlumb.height = $("#"+jsPlumb.canvas).height();
+		//jsPlumb.width = $("#"+jsPlumb.canvas).width();
+		
         for (i in json) {
             if(!testVisible(json[i]))
             	continue;
@@ -382,7 +387,7 @@
             else
             	d.css("top",(jsPlumb.offsetY+jsPlumb.height*(node.layoutPosY-miny)/(maxy-miny)) + 'px');
             if(maxx==minx)
-            	;//d.css("left", (jsPlumb.offsetX+jsPlumb.width*(1)/(2)) + 'px');
+            	d.css("left", (jsPlumb.offsetX+jsPlumb.width*(1)/(3)) + 'px');
             else
             	d.css("left", (jsPlumb.offsetX+jsPlumb.width*(node.layoutPosX-minx)/(maxx-minx)) + 'px');		
         }

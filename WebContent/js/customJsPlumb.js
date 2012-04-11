@@ -314,10 +314,11 @@ function loadSession(sessionId){
 		$(div).children(".trigger").width(w*multiple);
 		$(div).children(".trigger").height(w*multiple);
 		//Shrink the info icon
-		w = $(div).children(".info").width();
-		$(div).children(".info").width(w*multiple);
-		$(div).children(".info").height(w*multiple);
-		
+		w = $(div).children(".info").children("a").children("img").width();
+		if(w > 0){
+			$(div).children(".info").children("a").children("img").width(w*multiple);
+			$(div).children(".info").children("a").children("img").height(w*multiple);
+		}
 		//Shift the controls to the right
 		$(div).children(".controls").css("left",$(div).width());
 		$(div).children(".controls").css("top","-"+$(div).height());

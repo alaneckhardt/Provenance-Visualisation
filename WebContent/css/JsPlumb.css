@@ -220,9 +220,8 @@ canvas{
     width: 12px;
     z-index:5;
 }
-
 .info{
-    background-image: url("/ProvenanceService/css/images/info.png");
+    /*background-image: url("/ProvenanceService/css/images/info.png");*/
     background-size: 100%;
 	 /* background-color: lightgrey;
     border-radius: 3px;
@@ -230,12 +229,19 @@ canvas{
     font-weight: normal;
     */
     position: absolute;
-    bottom:-3px;
-    right:-3px;
+    bottom:-5px;
+    right:-5px;
     height: 12px;
     padding: 0 0 2px 2px;
     width: 12px;
     z-index:5;
+}
+.info a img{
+	border:none;    
+	bottom: 0;
+  position: absolute;
+  right: 0;
+  margin:0px;
 }
 
 .controls{    

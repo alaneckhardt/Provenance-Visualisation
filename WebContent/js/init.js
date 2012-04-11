@@ -27,15 +27,19 @@
 					//Trim the data.
 					data = data.replace(/^\s+|\s+$/g, '') ;
 					var person =  eval('(' + data + ')');
-					dInfo.click(function() {
+					dInfo.html('<a href="/ourspaces/profile.jsp?id='+person.id+'"><img style="border:none;margin:0px;" src="/ProvenanceService/css/images/info.png"></a>');
+					/*dInfo.click(function() {
 						window.location.href = "./profile.jsp?id="+person.id;
-					});				 
+					});*/
+					
 				});
 			},
 			"linkArtifact":function(node, dInfo){
-				dInfo.click(function() {
+				dInfo.html('<a href="/ourspaces/artifact_new.jsp?id='+escape(getSimpleId(node.id))+'"><img style="border:none;margin:0px;" src="/ProvenanceService/css/images/info.png"></a>');
+			
+				/*dInfo.click(function() {
 					window.location.href = "/ourspaces/artifact_new.jsp?id="+escape(getSimpleId(node.id));
-				});
+				});*/
 			},
 			"linkProcess":function(node, dInfo){
 				dInfo.removeClass("info");
