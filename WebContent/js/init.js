@@ -13,7 +13,7 @@
 	//var server = 'http://mrt.esc.abdn.ac.uk:8080/ProvenanceService/';
 	//var serverVisual = 'http://mrt.esc.abdn.ac.uk:8080/ourspaces/testProvenance/';
 	var server = '/ProvenanceService/';
-	var serverVisual = '/ourspaces/testProvenance/';
+	var serverVisual = '/ProvenanceService/';
 	var process_counter = 0;
 	var agent_counter = 0;
 	var artifacts_counter = 0;
@@ -45,6 +45,38 @@
 				dInfo.removeClass("info");
 			},
 	};	
+	/**
+	 * Returns the part of the URI without the namespace
+	 * @param uri
+	 * @returns
+	 */
+	function getLocalName(uri){
+		if(uri == null || uri == "")
+			return "";
+		if(uri.indexOf('#')>0)
+			return uri.substring(uri.indexOf('#')+1);
+		else if(uri.indexOf('/')>0)
+			return uri.substring(uri.lastIndexOf('/')+1);
+		else
+			return uri;
+	}
+	
+	/**
+	 * Returns the namespace part of the URI
+	 * @param uri
+	 * @returns
+	 */
+	function getNamespace(uri){
+		if(uri == null || uri == "")
+			return "";
+		if(uri.indexOf('#')>0)
+			return uri.substring(0, uri.indexOf('#')-1);
+		else if(uri.indexOf('/')>0)
+			return uri.substring(0, uri.indexOf('/')-1);
+	}
+	function initProvDiplay(){
+		
+	}
 	function init(){
 		$.getScript("./js/edges.jsp", function(data, textStatus){
 				   loadProperties();

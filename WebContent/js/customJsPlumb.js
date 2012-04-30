@@ -535,7 +535,6 @@ function loadSession(sessionId){
 		$("#"+escId+" p").droppable({
 			scope: jsPlumb.Defaults.Scope,
 			drop: function( event, ui ) {
-				//TODO - do the combobox to select the edge, if there is multiple types
 				//Create the new connection with the new endpoint		
 				var id = -1, dataType;
 				if(typeof $(this).attr("data-node") == "undefined" || $(this).attr("data-node") == null){

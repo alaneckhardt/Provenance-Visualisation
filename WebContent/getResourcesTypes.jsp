@@ -1,4 +1,4 @@
-<%@ page language="java" import="provenanceService.ParameterHelper,provenanceService.*,com.hp.hpl.jena.ontology.*,java.util.Iterator,java.util.*,java.net.*,java.text.SimpleDateFormat,java.util.ArrayList,java.io.*,java.net.*,java.util.Vector" contentType="text/html; charset=ISO-8859-1"
+<%@ page language="java" import="provenanceService.*,com.hp.hpl.jena.ontology.*,java.util.Iterator,java.util.*,java.net.*,java.text.SimpleDateFormat,java.util.ArrayList,java.io.*,java.net.*,java.util.Vector" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <% 
 ParameterHelper parHelp = new ParameterHelper(request, session);
@@ -20,8 +20,8 @@ ParameterHelper parHelp = new ParameterHelper(request, session);
 	if("true".equals(includeFirst)){
 		subClasses.add(className);
 	}
-	else{
-		subClasses.addAll(RDFProvider.getSubclasses(className));	
+	else{		
+		subClasses.addAll(RDFProvider.getSubclasses(className,true));	
 	}
 	
 %>
@@ -32,7 +32,7 @@ ParameterHelper parHelp = new ParameterHelper(request, session);
 
 	Vector<String> subClasses = new Vector<String>();
 	for(int i=0;i<labels.length;i++){
-		subClasses.addAll(RDFProvider.getSubclasses( className));
+		subClasses.addAll(RDFProvider.getSubclasses( className,true));
 	}
 	String classNameFull = className;
 	className=className.substring(className.indexOf('#')+1);

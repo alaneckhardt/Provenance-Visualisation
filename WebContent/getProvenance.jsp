@@ -1,12 +1,21 @@
-<%@ page language="java" import="provenanceService.*,java.util.Iterator,java.util.*,java.net.*,java.text.SimpleDateFormat,java.util.ArrayList,java.io.*,java.net.*,java.util.Vector" contentType="text/html; charset=ISO-8859-1"
+<%@ page language="java" import="provenanceService.*,com.hp.hpl.jena.rdf.model.*, com.hp.hpl.jena.ontology.*,java.util.Iterator,java.util.*,java.net.*,java.text.SimpleDateFormat,java.util.ArrayList,java.io.*,java.net.*,java.util.Vector" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <% 
 
-  ParameterHelper.setSess(session); 
-	ParameterHelper.setReq(request);
+ParameterHelper parHelp = new ParameterHelper(request, session);
 
-	String entityId = (String)ParameterHelper.getParameter("entity",  "");	
-	Graph g = ProvenanceService.getProvenance(entityId);
+	String entityId = (String)parHelp.getParameter("entity",  "");	
+	Graph g = ProvenanceService.getProvenance(entityId);	
+	for(int i=0;i<g.size();i++){
+		Node n = g.get(i);
+		if(n.getTitle() == null)
+			n.setTitle(Utility.getLocalName(n.getId()));
+
+		Graph g2 = ProvenanceService.getProvenance(n.getId());	
+		g = g.merge(g2);
+		//if(!"Agent".equals(n.getBasicType()))
+		//	n.setTitle(ProvenanceService.getResourceTitle(n.getId()));
+	}
 	String json = ProvenanceService.graphToJSONString(g);
 %>
 <%=json %>
