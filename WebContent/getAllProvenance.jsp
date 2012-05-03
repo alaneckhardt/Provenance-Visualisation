@@ -12,6 +12,8 @@
 	/*for(;100<g.size();){
 		g.getNodes().remove(g.size()-1);
 	}*/
+	
+	
 	for(int i=0;i<g.size() && g2.size() < 10;i++){
 		Node n = g.get(i);
 		g2.addNode(n);
