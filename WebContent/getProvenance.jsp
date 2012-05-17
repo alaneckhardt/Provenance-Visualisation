@@ -11,8 +11,6 @@ ParameterHelper parHelp = new ParameterHelper(request, session);
 		if(n.getTitle() == null)
 			n.setTitle(Utility.getLocalName(n.getId()));
 
-		//Graph g2 = ProvenanceService.getProvenance(n.getId());	
-		//g = g.merge(g2);
 		//if(!"Agent".equals(n.getBasicType()))
 		//	n.setTitle(ProvenanceService.getResourceTitle(n.getId()));
 	}
