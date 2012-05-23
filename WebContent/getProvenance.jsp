@@ -4,8 +4,9 @@
 
 ParameterHelper parHelp = new ParameterHelper(request, session);
 
+	String sessionId = (String)parHelp.getParameter("sessionId",  "");	
 	String entityId = (String)parHelp.getParameter("entity",  "");	
-	Graph g = ProvenanceService.getProvenance(entityId);	
+	Graph g = ProvenanceService.getProvenance(entityId, sessionId);	
 	for(int i=0;i<g.size();i++){
 		Node n = g.get(i);
 		if(n.getTitle() == null)

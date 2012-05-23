@@ -94,10 +94,14 @@ function initProvenance() {
 		      		for(x in graph){
 		      			var node = graph[x];
 		      			try{
-		      				var d = createElement(node);
-		      				if(d!=null)
-								shrinkDiv(d, zoomLevel/10, jsPlumb.offsetX+jsPlumb.width/2, jsPlumb.offsetY+jsPlumb.height/2);
-		    				
+							var node2 = findNode(node.id);
+							//Append the new node to the list of nodes.
+							if(node2 == null){
+								json.push(node);
+								var d = createElement(node);
+								if(d!=null)
+									shrinkDiv(d, zoomLevel/10, jsPlumb.offsetX+jsPlumb.width/2, jsPlumb.offsetY+jsPlumb.height/2);
+							}		    				
 		      			}
 		      			catch(err)
 		      			  {

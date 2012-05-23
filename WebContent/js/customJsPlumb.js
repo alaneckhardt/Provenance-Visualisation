@@ -355,8 +355,10 @@ function loadSession(sessionId){
 		}
 	}
 	
-	function loadProvenance(res){
+	function loadProvenance(res, sessionId){
 		var query = serverVisual+"getProvenance.jsp?entity="+escape(res);
+		if(typeof sessionId !='undefined' && sessionId != null && sessionId != "")
+			query+="&sessionId="+escape(sessionId);
 		$.get(query, function(data) {
 			//Trim the data.
 			data = data.replace(/^\s+|\s+$/g, '') ;
@@ -445,7 +447,7 @@ function loadSession(sessionId){
 		        }
 			});
 		  $(dTrigger).click(function(){
-			  loadProvenance(node.id);
+			  loadProvenance(node.id, sessionId);
 			  return false;
 		  });
 		dTrigger.addClass("trigger");
