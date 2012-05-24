@@ -90,15 +90,14 @@
   <owl:Class rdf:about="#MessagingAction">
     <rdfs:subClassOf rdf:resource="#CommunicationAction"/>
   </owl:Class>
+  <owl:Class rdf:ID="StateChangeAction">
+    <rdfs:subClassOf rdf:resource="http://openprovenance.org/ontology#Process"/>
+  </owl:Class>
   <owl:Class rdf:about="#CreateAction">
-    <rdfs:subClassOf>
-      <owl:Class rdf:ID="StateChangeAction"/>
-    </rdfs:subClassOf>
+    <rdfs:subClassOf rdf:resource="#StateChangeAction"/>
   </owl:Class>
   <owl:Class rdf:about="#SocialNetworkStateChange">
-    <rdfs:subClassOf>
-      <owl:Class rdf:ID="StateChangeAction"/>
-    </rdfs:subClassOf>
+    <rdfs:subClassOf rdf:resource="#StateChangeAction"/>
   </owl:Class>
   <owl:Class rdf:about="#IgnoreMessage">
     <rdfs:subClassOf rdf:resource="#MessagingAction"/>
@@ -109,9 +108,6 @@
   </owl:Class>
   <owl:Class rdf:ID="AcceptInvite">
     <rdfs:subClassOf rdf:resource="#SendReply"/>
-  </owl:Class>
-  <owl:Class rdf:about="#StateChangeAction">
-    <rdfs:subClassOf rdf:resource="http://openprovenance.org/ontology#Process"/>
   </owl:Class>
   <owl:Class rdf:ID="SendEventInvite">
     <rdfs:subClassOf rdf:resource="#SendInvite"/>
