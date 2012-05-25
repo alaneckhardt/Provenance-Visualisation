@@ -654,10 +654,10 @@ function loadSession(sessionId){
 							if(obj == selected1)
 								continue;
 							
-							if(obj.fullType==range){
+							if(testVisible(obj) && obj.fullType==range){
 								enable(edge, obj, type);
 							}
-							else if(superclasses[obj.fullType] != null && $.inArray(range, superclasses[obj.fullType]) != -1){
+							else if(testVisible(obj) && superclasses[obj.fullType] != null && $.inArray(range, superclasses[obj.fullType]) != -1){
 								enable(edge, obj, type);								
 							}
 							else{
