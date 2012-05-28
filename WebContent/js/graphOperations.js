@@ -25,7 +25,7 @@
 			var dataTrim = data.replace(/^\s+|\s+$/g, '') ;
 			if(dataTrim.lastIndexOf('Error', 0) === 0)
 				return;
-			displayEntity(dataTrim, title, "rectangle", className);
+			displayEntity(dataTrim, title, "Process", className);
 			process_counter++;
 		}
 
@@ -42,7 +42,7 @@
 			var dataTrim = data.replace(/^\s+|\s+$/g, '') ;
 			if(dataTrim.lastIndexOf('Error', 0) === 0)
 				return;
-			displayEntity(dataTrim, title, "diamond", className);	
+			displayEntity(dataTrim, title, "Agent", className);	
 			agent_counter++;	
 		}
 		
@@ -58,7 +58,7 @@
 			var dataTrim = data.replace(/^\s+|\s+$/g, '') ;
 			if(dataTrim.lastIndexOf('Error', 0) === 0)
 				return;
-			displayEntity(dataTrim, title, "ellipse", className);	
+			displayEntity(dataTrim, title, "Artifact", className);	
 			artifacts_counter++;	
 		}
 
@@ -121,7 +121,7 @@
 				//Trim the data.
 				data = data.replace(/^\s+|\s+$/g, '') ;
 				displayProcess(data, title, className);
-				query = server+'ProvenanceService?action=addTitle&session='+escape(data)+'&object='+escape(data)+'&title='+escape(title);
+				query = server+'ProvenanceService?action=addTitle&session='+escape(sessionId)+'&object='+escape(data)+'&title='+escape(title);
 				$.get(query, function(data){
 				});
 			});

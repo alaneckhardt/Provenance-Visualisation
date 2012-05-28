@@ -118,7 +118,7 @@ function loadSession(sessionId){
 	 */
 	function displayEntity(id, title, basicType, fullType){		
 			var escId = getSimpleId(id);
-			var jsonnode = {
+			var node = {
 				"id": id,
 				"title": title,
 				"basicType": basicType,
@@ -126,7 +126,7 @@ function loadSession(sessionId){
 				"escId":escId,
 				"adjacencies":[]
 			};			
-			createElement(jsonnode);
+  			addToGraph(node);
 	}
 	
 	/**
@@ -369,20 +369,7 @@ function loadSession(sessionId){
 			//TODO - merge the edges!!!!
 			for(var x in graph){
 				var node = graph[x];
-				try{
-					var node2 = findNode(node.id);
-					//Append the new node to the list of nodes.
-					if(node2 == null){
-						json.push(node);
-						var d = createElement(node);
-						if(d!=null)
-							shrinkDiv(d, zoomLevel/10, jsPlumb.offsetX+jsPlumb.width/2, jsPlumb.offsetY+jsPlumb.height/2);
-					}
-				}
-				catch(err)
-				  {
-				  	alert(err);
-				  }
+				addToGraph(node);
 			}
 			for(x in graph){
 				var node = graph[x];
@@ -760,6 +747,23 @@ function loadSession(sessionId){
 				return node;
 		}
 		return null;
+	}
+	function addToGraph(node){
+			try{
+				var node2 = findNode(node.id);
+				//Append the new node to the list of nodes.
+				if(node2 == null){
+					json.push(node);
+					var d = createElement(node);
+					if(d!=null)
+						shrinkDiv(d, zoomLevel/10, jsPlumb.offsetX+jsPlumb.width/2, jsPlumb.offsetY+jsPlumb.height/2);
+				}		    				
+  			}
+  			catch(err)
+  			  {
+  			  	alert(err);
+  			  }
+
 	}
 	/*
 	function collapseEditing(){
