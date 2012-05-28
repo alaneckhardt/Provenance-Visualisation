@@ -171,7 +171,7 @@ function loadSession(sessionId){
 		var anchors = [[0.5, 0, 0, -1], [1, 0.5, 1, 0], [0.5, 1, 0, 1], [0, 0.5, -1, 0] ];
 		var text = typeVis;
 		if(typeof provenanceEditable  != "undefined" && provenanceEditable == true){
-			text+=" <span style=\"display:block;\" class=\"delete\"><a href=\"#\" onclick=\"removeEdge('"+idTrim+"','"+escfrom+"','"+escto+"');\">x</a></span>";
+			text+=" <span style=\"display:block;float:right;\" class=\"delete\"><a href=\"#\" onclick=\"removeEdge('"+idTrim+"','"+escfrom+"','"+escto+"');\">x</a></span>";
 		}
 		else{
 			text+=" <span style=\"display:none;\" class=\"delete\"><a href=\"#\" onclick=\"removeEdge('"+idTrim+"','"+escfrom+"','"+escto+"');\">x</a></span>";			
@@ -717,21 +717,35 @@ function loadSession(sessionId){
 	
 
 	function checkEditing(){
-		//If not editable, hide the editing things.
+		//If editable, show the editing things.
 		if(provenanceEditable == true){
-			//Disable creating new connections.
+			//Enable creating new connections.
 			$('._jsPlumb_endpoint').show();
-			//Hide "x" at the edge name.
-			$('.delete').show();
 			jsPlumb.repaintEverything();
+			//Show "x" at the edge name.
+			$('.delete').show();
+			//Enable controls on the left
+			$('#endSessionCommit').removeAttr("disabled");
+			$('#endSessionRollback').removeAttr("disabled");
+			$('#-title').removeAttr("disabled");
+			$('#addProcesses').removeAttr("disabled");
+			$('#startSession').css("font-weight","normal");
+			$('#startSession').attr("disabled","disabled");
 		}
 		//If not editable, hide the editing things.
 		if(provenanceEditable == false){
 			//Disable creating new connections.
 			$('._jsPlumb_endpoint').hide();
+			jsPlumb.repaintEverything();
 			//Hide "x" at the edge name.
 			$('.delete').hide();
-			jsPlumb.repaintEverything();
+			//Disable controls on the left
+			$('#endSessionCommit').attr("disabled","disabled");
+			$('#endSessionRollback').attr("disabled","disabled");
+			$('#-title').attr("disabled","disabled");
+			$('#addProcesses').attr("disabled","disabled");
+			$('#startSession').css("font-weight","bold");
+			$('#startSession').removeAttr("disabled");
 		}		
 	}
 

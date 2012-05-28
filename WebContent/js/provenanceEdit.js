@@ -1,5 +1,13 @@
 
-
+function enableEditing(data){
+	data = data.replace(/^\s+|\s+$/g, ''); 
+	sessionId = data;
+	provenanceEditable = true;
+	checkEditing();
+}
+function disableEditing(data){
+	
+}
 function hideSelected() {
 	hideType(".selected", "");
 }

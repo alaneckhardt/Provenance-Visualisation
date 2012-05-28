@@ -387,9 +387,9 @@
             else
             	d.css("top",(jsPlumb.offsetY+jsPlumb.height*(node.layoutPosY-miny)/(maxy-miny)) + 'px');
             if(maxx==minx)
-            	d.css("left", (jsPlumb.offsetX+jsPlumb.width*(1)/(3)) + 'px');
+            	d.css("left", (jsPlumb.offsetX+(jsPlumb.width-100)*(1)/(3)) + 'px');
             else
-            	d.css("left", (jsPlumb.offsetX+jsPlumb.width*(node.layoutPosX-minx)/(maxx-minx)) + 'px');		
+            	d.css("left", (jsPlumb.offsetX+(jsPlumb.width-100)*(node.layoutPosX-minx)/(maxx-minx)) + 'px');		
         }
 		jsPlumb.repaintEverything();//Everything
     }

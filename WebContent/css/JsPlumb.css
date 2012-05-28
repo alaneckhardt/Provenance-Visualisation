@@ -103,6 +103,10 @@
 font-size:12px;
 color:#222;
 }
+.delete {
+	float: right;
+    margin-left: 3px;
+}
 .delete a {
 	color:red;
 }
