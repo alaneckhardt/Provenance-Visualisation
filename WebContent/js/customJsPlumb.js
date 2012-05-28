@@ -171,7 +171,10 @@ function loadSession(sessionId){
 		var anchors = [[0.5, 0, 0, -1], [1, 0.5, 1, 0], [0.5, 1, 0, 1], [0, 0.5, -1, 0] ];
 		var text = typeVis;
 		if(typeof provenanceEditable  != "undefined" && provenanceEditable == true){
-			text+=" <span class=\"delete\"><a href=\"#\" onclick=\"removeEdge('"+idTrim+"','"+escfrom+"','"+escto+"');\">x</a></span>";
+			text+=" <span style=\"display:block;\" class=\"delete\"><a href=\"#\" onclick=\"removeEdge('"+idTrim+"','"+escfrom+"','"+escto+"');\">x</a></span>";
+		}
+		else{
+			text+=" <span style=\"display:none;\" class=\"delete\"><a href=\"#\" onclick=\"removeEdge('"+idTrim+"','"+escfrom+"','"+escto+"');\">x</a></span>";			
 		}
 		var con = jsPlumb.connect({
 			source:escfrom,
@@ -726,9 +729,29 @@ function loadSession(sessionId){
 	}
 	
 
-	function showEditing(){
-		json = jsonBackup;
+	function checkEditing(){
+		//If not editable, hide the editing things.
+		if(provenanceEditable == true){
+			//Disable creating new connections.
+			$('._jsPlumb_endpoint').show();
+			//Hide "x" at the edge name.
+			$('.delete').show();
+			jsPlumb.repaintEverything();
+		}
+		//If not editable, hide the editing things.
+		if(provenanceEditable == false){
+			//Disable creating new connections.
+			$('._jsPlumb_endpoint').hide();
+			//Hide "x" at the edge name.
+			$('.delete').hide();
+			jsPlumb.repaintEverything();
+		}		
 	}
+
+
+	/*function showEditing(){
+		json = jsonBackup;
+	}*/
 	
 	function findNode(nodeId){
 		for(var x in json){

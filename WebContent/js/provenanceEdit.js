@@ -51,6 +51,14 @@ function initProvenance() {
 			}
 		});
 		
+		//Check if closing non-commited window
+        $(window).bind('beforeunload', function(){
+			if(provenanceEditable == true){           
+				var message =  '-- You have not commited your changes in provenance  ---' + 
+		           '\n Do you really want to leave the page?';
+	           return message;
+			}
+           });
 		
 		//attach autocomplete  
         $('#provenanceInputString').autocomplete({  						  
