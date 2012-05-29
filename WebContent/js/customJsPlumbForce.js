@@ -1,7 +1,9 @@
 var f;
+var alpha;
 var multiple = 3;
 
-function layout() {	
+function layoutForce() {	
+	d3_timer_interval = 0;
 	f = new force();
 	f.nodes(json);
 	var links = [];
@@ -23,6 +25,7 @@ function layout() {
 	// layoutOrder();
 	// layoutTimestamp();
 	resize();
+	//;layoutStop();
 }
 
 function layoutStop(){
@@ -46,7 +49,7 @@ function getIndex(url) {
 }
 
 force = function() {
-	var force = {}, event = dispatch("tick"), size = [ 1, 1 ], drag = false, alpha = 0, friction = .9, linkDistance = d3_layout_forceLinkDistance, linkStrength = d3_layout_forceLinkStrength, charge = -30, gravity = .1, theta = .8, interval, nodes = [], links = [], distances = [], strengths = [], charges  = [];
+	var force = {}, event = dispatch("tick"), size = [ 1, 1 ], drag = false, friction = .9, linkDistance = d3_layout_forceLinkDistance, linkStrength = d3_layout_forceLinkStrength, charge = -30, gravity = .1, theta = .8, interval, nodes = [], links = [], distances = [], strengths = [], charges  = [];
 
 	function repulse(node) {
 		return function(quad, x1, y1, x2, y2) {
@@ -133,10 +136,10 @@ force = function() {
 				o.layoutPosY -= (o.py - (o.py = o.layoutPosY)) * friction;
 			}
 		}
-		event.tick({
+		/*event.tick({
 			type : "tick",
 			alpha : alpha
-		});
+		});*/
 		// simulated annealing, basically
 		return (alpha *= .90) < .005;
 	}
@@ -261,10 +264,9 @@ force = function() {
 	};
 	force.resume = function() {
 		alpha = .1;
-		timer(tick);
-		/*for(var i = 0;i<100;i++)
-			tick();
-		*/
+	//	timer(tick);
+		for(var i = 0;i<100;i++)
+			tick();		
 		return force;
 	};
 	force.stop = function() {
@@ -476,6 +478,8 @@ timer = function(callback, delay, then) {
 };
 function d3_timer_step() {
 	var elapsed, now = Date.now(), t1 = d3_timer_queue;
+	if(alpha < 0.05)
+		return;
 	while (t1) {
 		elapsed = now - t1.then;
 		if (elapsed >= t1.delay)
@@ -654,7 +658,7 @@ function d3_geom_quadtreePoint(p) {
 		y : p[1]
 	};
 }
-
+/*
 function resize(){
     var minx = Infinity, maxx = -Infinity, miny = Infinity, maxy = -Infinity;
     var sumx=0, sumy=0;
@@ -696,4 +700,4 @@ function testVisible(n){
 	//if(disabledTypes.indexOf(n.fullType)!=-1)
 	//	return false;
 	return true;
-}
+}*/
