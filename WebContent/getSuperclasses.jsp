@@ -1,4 +1,4 @@
-<%@ page language="java" import="common.ParameterHelper,provenanceService.*, com.hp.hpl.jena.ontology.*,java.util.Iterator,java.util.*,java.net.*,java.text.SimpleDateFormat,java.util.ArrayList,java.io.*,java.net.*,java.util.Vector" contentType="text/html; charset=ISO-8859-1"
+<%@ page language="java" import="provenanceService.ParameterHelper,provenanceService.*, com.hp.hpl.jena.ontology.*,java.util.Iterator,java.util.*,java.net.*,java.text.SimpleDateFormat,java.util.ArrayList,java.io.*,java.net.*,java.util.Vector" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <% 
 ParameterHelper parHelp = new ParameterHelper(request, session);
@@ -8,13 +8,13 @@ ParameterHelper parHelp = new ParameterHelper(request, session);
 function loadSuperclasses<%=Utility.getLocalName(className) %>(){
 	<%
 	//Get all subclasses
-	Vector<String> subClasses = RDFProvider.getSubclasses( className);
+	Vector<String> subClasses = ProvenanceService.getDataProvider().getSubclasses( className);
 	//Writing all superclasses of all subclasses of given class (e.g. of JournalPaper, when given Artifact)
 	for(int i=0;i<subClasses.size();i++){
 		String subClass = subClasses.get(i);
 
 		//Get all superclasses of the subclass (Paper, Artifact, Node,...)
-		Vector<String> superClasses = RDFProvider.getSuperclasses( subClass);
+		Vector<String> superClasses = ProvenanceService.getDataProvider().getSuperclasses( subClass);
 %>
 		superclasses['<%=subClass%>']= [];
 		<%
@@ -26,7 +26,7 @@ function loadSuperclasses<%=Utility.getLocalName(className) %>(){
 					%>superclasses['<%=subClass%>'].push('<%=superClass%>');<%
 	}
 		
-		Vector<String> subClassesTemp = RDFProvider.getSubclasses( subClass);
+		Vector<String> subClassesTemp = ProvenanceService.getDataProvider().getSubclasses( subClass);
 		for(int j=0;j<subClassesTemp.size();j++){
 			String s = subClassesTemp.get(j);
 			if(s.equals(className) || superClasses.contains(s) || subClasses.contains(s))
