@@ -180,6 +180,15 @@ canvas{
 	/*height:25px;*/
   background-color:#2299FF;
 }
+.Process.system{
+	opacity:0.4;
+	/*height:25px;
+  background-color:#1177BB;*/
+}
+.system {
+    opacity: 0.4;
+}
+
 
 
 .labelDrag {

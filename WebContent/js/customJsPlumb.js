@@ -63,7 +63,7 @@ function loadSession(sessionId){
 					var node = graph[x];
 					for(y in node.adjacencies){
 						var adj = node.adjacencies[y];		
-						displayRelationship(adj.id,adj.type, adj.from, adj.to);
+						displayRelationship2(adj);
 					}
 				}
 				layout();
@@ -128,7 +128,17 @@ function loadSession(sessionId){
 			};			
   			addToGraph(node);
 	}
-	
+
+	function displayRelationship2(adj){
+
+		var x, classes = "";
+		for(x in adj.properties){
+			var prop = adj.properties[x];
+			if(prop.name == "class")
+				classes += prop.value+" ";
+		}
+		displayRelationship(adj.id,adj.type, adj.from, adj.to, classes);
+	}
 	/**
 	 * 
 	 * @param id URI of the edge
@@ -136,19 +146,23 @@ function loadSession(sessionId){
 	 * @param from URI of the source div
 	 * @param to URI of the target div
 	 */
-	function displayRelationship(id,type, from, to){
+	function displayRelationship(id,type, from, to, classes){
 		
 		//Trim the data.
 		var idTrim = id.replace(/^\s+|\s+$/g, '') ;
 		var typeVis = type.substring(type.indexOf('#')+1);		
 		var escfrom = from.substring(from.indexOf('#')+1);		
 		var escto = to.substring(to.indexOf('#')+1);
-		
 		//Do not duplicate edges.
 		if(checkExistsEdge(idTrim, escfrom, escto))
 			return;
+		
+		var classes = "";
+		if(	$("#"+escfrom).hasClass("system")
+				||	$("#"+escto).hasClass("system"))
+			classes = "system";
 
-		setClasses(escfrom+" "+escto+" _jsPlumb_overlay");
+		setClasses(classes+" "+escfrom+" "+escto+" _jsPlumb_overlay");
 		//var fromJson = json[$("#"+escfrom).attr("data-node")];
 		//fromJson.adjacencies.push({"from":, "to":$("#"+escto).attr("data-node"), "title":title});
 		var loc = 0.5;
@@ -186,12 +200,14 @@ function loadSession(sessionId){
 			   [ "Label",  {
 				   			id:idTrim,
 				   			label:text, 
-				   			cssClass:"label "+type.substring(type.indexOf('#')+1), 
+				   			cssClass:classes+" label "+type.substring(type.indexOf('#')+1), 
 				   			location:loc,
 				   			labelStyle:{ color : "black" } } ]
 			],
 			endpoint:["Rectangle",{ width:5, height:3, isSource:false, isTarget:false}]
 		});
+		
+		$(con.canvas).addClass(classes);
 		$(con.canvas).attr("data-id",idTrim);
 		$(con.canvas).attr("data-type",type);
 		$(con.canvas).attr("data-typetext",typeVis);
@@ -381,7 +397,7 @@ function loadSession(sessionId){
 				
 				for(var y in node.adjacencies){
 					var adj = node.adjacencies[y];		
-					displayRelationship(adj.id,adj.type, adj.from, adj.to);
+					displayRelationship2(adj);
 				}
 			}
 			shrinkEdges();
@@ -411,6 +427,13 @@ function loadSession(sessionId){
 		dInner.attr("id", getSimpleId(node.id));
 		dInner.addClass(node.basicType);
 		dInner.addClass("shape");
+		var x;
+		for(x in node.properties){
+			var prop = node.properties[x];
+			if(prop.name == "class")
+				dInner.addClass(prop.value);
+		}
+			
 		dInner.css("z-index","4");
 		dInner.html("<p style=\"padding: 0.1em 0;\">"+node.title+"</p>");
 		var w = jsPlumb.width, h = jsPlumb.height;
