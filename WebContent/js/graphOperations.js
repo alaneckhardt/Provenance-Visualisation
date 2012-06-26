@@ -195,11 +195,11 @@
 		/**
 		 * Adds causal relationship. The values are taken from UI.
 		 * 
-		 * @param cause The cause of the relationship
-		 * @param effect The effect of the relationship
+		 * @param from The start of the edge
+		 * @param to The end of the edge
 		 * @param relation The type of the relationship
 		 */
-		function addCausalRelationship(cause,effect, relation){
+		function addCausalRelationship(from,to, relation){
 			//var cause = selected1.id;
 			//var effect = selected2.id;
 			//var relation = $("#-menu").val();
@@ -213,8 +213,8 @@
 			}                
 			
 			var query = server+"ProvenanceService?action=addCausalRelationship&session="+escape(sessionId)
-				+"&cause="+escape(cause)
-				+"&effect="+escape(effect)
+				+"&from="+escape(from)
+				+"&to="+escape(to)
 				+"&relation="+escape(relation);
 			$.get(query, displayNewCausalRelationship);
 		}

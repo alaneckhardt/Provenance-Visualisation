@@ -42,7 +42,10 @@
 				});*/
 			},
 			"linkProcess":function(node, dInfo){
-				dInfo.removeClass("info");
+				if(node.id.substring(0, "http://openprovenance.org/ontology#".length)=="http://openprovenance.org/ontology#")
+					dInfo.html('<a href="/ourspaces/artifact_new.jsp?id='+escape(getSimpleId(node.id))+'"><img style="border:none;margin:0px;" src="/ProvenanceService/css/images/info.png"></a>');
+				else
+					dInfo.removeClass("info");
 			},
 	};	
 	/**
@@ -74,9 +77,9 @@
 		else if(uri.indexOf('/')>0)
 			return uri.substring(0, uri.indexOf('/')-1);
 	}
-	function initProvDiplay(){
+	//function initProvDiplay(){
 		
-	}
+	//}
 	function init(){
 		$.getScript("./js/edges.jsp", function(data, textStatus){
 				   loadProperties();
@@ -135,8 +138,8 @@
 			var e = edges[x];
 			//Test if the required cause type is equal to the selected type or its super-type.
 			//E.g. if a Process is required, selected can be DataCollection.
-			if(typesFit(cause, e.causeAllValuesFrom)&&
-					typesFit(effect, e.effectAllValuesFrom)
+			if(typesFit(cause, e.fromAllValuesFrom)&&
+					typesFit(effect, e.toAllValuesFrom)
 			   ){
 				$("#"+e.edge).removeAttr("disabled");
 				$("#"+e.edge).show();

@@ -249,19 +249,19 @@ function loadSession(sessionId){
 	}
 
 	
-	function findEdges(cause, effect, edgesIn){
+	function findEdges(from, to, edgesIn){
 		var res = [];		
 		for(var x in edgesIn){
 			var edge = edges[x];
-			if(effect == null && (edge.causeAllValuesFrom==cause || (superclasses[cause] != null && $.inArray(edge.causeAllValuesFrom, superclasses[cause]) != -1) )){
+			if(to == null && (edge.fromAllValuesFrom==from || (superclasses[from] != null && $.inArray(edge.fromAllValuesFrom, superclasses[from]) != -1) )){
 				res.push(edge);
 			}
-			else if(cause == null && (edge.effectAllValuesFrom==effect ||(superclasses[effect] != null && $.inArray(edge.effectAllValuesFrom, superclasses[effect]) != -1))){
+			else if(from == null && (edge.toctAllValuesFrom==to ||(superclasses[to] != null && $.inArray(edge.toAllValuesFrom, superclasses[to]) != -1))){
 				res.push(edge);
 			}
-			else if(cause != null && effect != null 
-					&& (edge.causeAllValuesFrom==cause || (superclasses[cause] != null && $.inArray(edge.causeAllValuesFrom, superclasses[cause]) != -1))					
-					&& (edge.effectAllValuesFrom==effect|| (superclasses[effect] != null && $.inArray(edge.effectAllValuesFrom, superclasses[effect]) != -1))){
+			else if(from != null && to != null 
+					&& (edge.fromAllValuesFrom==from || (superclasses[from] != null && $.inArray(edge.fromAllValuesFrom, superclasses[from]) != -1))					
+					&& (edge.toAllValuesFrom==to|| (superclasses[to] != null && $.inArray(edge.toAllValuesFrom, superclasses[to]) != -1))){
 				res.push(edge);
 			}
 		}
@@ -659,7 +659,7 @@ function loadSession(sessionId){
 					var ed = findEdges(type,null, edges);
 					for(var x in ed){
 						var edge = ed[x];
-						var range = edge.effectAllValuesFrom;
+						var range = edge.toAllValuesFrom;
 						//TODO list all the nodes and check the range and the type of the node.
 						for(var y in json){
 							var obj = json[y];

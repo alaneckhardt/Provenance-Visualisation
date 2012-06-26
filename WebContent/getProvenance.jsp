@@ -13,6 +13,16 @@ ParameterHelper parHelp = new ParameterHelper(request, session);
 			n.setTitle(Utility.getLocalName(n.getId()));
 
 		//if(!"Agent".equals(n.getBasicType()))
+		//	n.setTitle(rdf.getResourceTitle(n.getId()));
+		if(n.getId().startsWith("http://www.policygrid.org/ourspacesVRE.owl#")){
+			n.addProperty("class","system");
+		}
+		for(Edge e : n.getAdjacencies()){
+			if(e.getId().startsWith("http://www.policygrid.org/ourspacesVRE.owl#")){
+				//e.addProperty("class","system");
+			}
+		}
+		//if(!"Agent".equals(n.getBasicType()))
 		//	n.setTitle(ProvenanceService.getResourceTitle(n.getId()));
 	}
 	String json = ProvenanceService.graphToJSONString(g);
