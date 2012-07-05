@@ -1,17 +1,6 @@
 <%@ page language="java" import="provenanceService.*, com.hp.hpl.jena.rdf.model.*, com.hp.hpl.jena.ontology.*,java.util.Iterator,java.util.*,java.net.*,java.text.SimpleDateFormat,java.util.ArrayList,java.io.*,java.net.*,java.util.Vector" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 	
-	/**
-	 * This is a class for containing the properties.
-	 */
-	function Edge() {
-		//Uri of the edge
-		this.idEdge = 'prop';
-		//Name to display
-	    this.edge = 'prop';
-	    this.fromAllValuesFrom = 'http://openprovenance.org/ontology#Agent';
-	    this.toAllValuesFrom = 'http://openprovenance.org/ontology#Agent';
-	}
 
 	function loadProperties(){
 		var edge;
