@@ -314,7 +314,7 @@ function ProvVisGraph(provVis) {
 			style : {padding : '2px',tip : {color : 'black'}}
 		});
 		$(dTrigger).click(function() {
-			provVis.core.loadProvenance(node.id, sessionId);
+			provVis.core.loadProvenance(node.id, provVis.comm.sessionId);
 			return false;
 		});
 		dTrigger.addClass("trigger");

@@ -42,6 +42,8 @@ function EdgeType() {
     /**Range of the edge*/
     this.toAllValuesFrom = 'http://openprovenance.org/ontology#Agent';
 }
+var server = '/ProvenanceService/';
+var serverVisual = '/ProvenanceService/';
 function ProvVisCore(provVis) {
 	this.provVis = provVis;
 	this.conf = {
@@ -122,7 +124,6 @@ function ProvVisCore(provVis) {
 			jsPlumb.Defaults.Container = $("#" + jsPlumb.canvas);
 
 		});
-		// loadSession(sessionId);
 
 		// Panning support
 		jsPlumb.draggable($(".agent"));

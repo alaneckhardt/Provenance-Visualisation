@@ -3,6 +3,7 @@
  */
 function ProvVisComm(provVis) {
 	this.provVis = provVis;
+	this.sessionId;
 	/**
 	 * 
 	 * @param data URI of the process
@@ -101,7 +102,7 @@ function ProvVisComm(provVis) {
 	 */
 	this.addProcess = function(className) {
 		var title = $("#-title").val();
-		var query = server + 'ProvenanceService?action=addProcess&session='+ escape(sessionId);
+		var query = server + 'ProvenanceService?action=addProcess&session='+ escape(this.sessionId);
 		if (className != null && className != "") {
 			query += "&type=" + escape(className);
 		}
@@ -110,7 +111,7 @@ function ProvVisComm(provVis) {
 			//Trim the data.
 			data = data.replace(/^\s+|\s+$/g, '');
 			provVis.comm.displayProcess(data, title, className);
-			query = server + 'ProvenanceService?action=addTitle&session='+ escape(sessionId) + '&object=' + escape(data) + '&title='+ escape(title);
+			query = server + 'ProvenanceService?action=addTitle&session='+ escape(this.sessionId) + '&object=' + escape(data) + '&title='+ escape(title);
 			$.get(query, function(data) {
 			});
 		});
@@ -122,7 +123,7 @@ function ProvVisComm(provVis) {
 	 */
 	this.addAgent = function(className) {
 		var title = $("#-title").val();
-		var query = server + 'ProvenanceService?action=addAgent&session='+ escape(sessionId);
+		var query = server + 'ProvenanceService?action=addAgent&session='+ escape(this.sessionId);
 		if (className != null && className != "") {
 			query += "&type=" + escape(className);
 		}
@@ -130,7 +131,7 @@ function ProvVisComm(provVis) {
 			//Trim the data.
 			data = data.replace(/^\s+|\s+$/g, '');
 			provVis.comm.displayAgent(data, title, className);
-			query = server + 'ProvenanceService?action=addTitle&session='+ escape(sessionId) + '&object=' + escape(data) + '&title='+ escape(title);
+			query = server + 'ProvenanceService?action=addTitle&session='+ escape(this.sessionId) + '&object=' + escape(data) + '&title='+ escape(title);
 			$.get(query, function(data) {
 			});
 		});
@@ -142,7 +143,7 @@ function ProvVisComm(provVis) {
 	 */
 	this.addArtifact = function(className) {
 		var title = $("#-title").val();
-		var query = server + 'ProvenanceService?action=addArtifact&session='+ escape(sessionId);
+		var query = server + 'ProvenanceService?action=addArtifact&session='+ escape(this.sessionId);
 		if (className != null && className != "") {
 			query += "&type=" + escape(className);
 		}
@@ -150,7 +151,7 @@ function ProvVisComm(provVis) {
 			//Trim the data.
 			data = data.replace(/^\s+|\s+$/g, '');
 			provVis.comm.displayArtifact(data, title, className);
-			query = server + 'ProvenanceService?action=addTitle&session='+ escape(sessionId) + '&object=' + escape(data) + '&title='
+			query = server + 'ProvenanceService?action=addTitle&session='+ escape(this.sessionId) + '&object=' + escape(data) + '&title='
 					+ escape(title);
 			$.get(query, function(data) {
 			});
@@ -165,7 +166,7 @@ function ProvVisComm(provVis) {
 	 */
 	this.addExistingResource = function(uri, className, title) {
 		var query = server
-				+ 'ProvenanceService?action=addExistingResource&session='+ escape(sessionId) + '&resource=' + escape(uri) + '&type='+ escape(className);
+				+ 'ProvenanceService?action=addExistingResource&session='+ escape(this.sessionId) + '&resource=' + escape(uri) + '&type='+ escape(className);
 		if (title != null && title != "") {
 			query += "&title=" + escape(title);
 		}
@@ -198,7 +199,7 @@ function ProvVisComm(provVis) {
 		}
 
 		var query = server
-				+ "ProvenanceService?action=addCausalRelationship&session="+ escape(sessionId) + "&from=" + escape(from) + "&to="+ escape(to) + "&relation=" + escape(relation);
+				+ "ProvenanceService?action=addCausalRelationship&session="+ escape(this.sessionId) + "&from=" + escape(from) + "&to="+ escape(to) + "&relation=" + escape(relation);
 		$.get(query, provVis.comm.displayNewCausalRelationship);
 	};
 
@@ -210,7 +211,7 @@ function ProvVisComm(provVis) {
 		$.get(query, function(data) {
 			//Trim the data.
 			data = data.replace(/^\s+|\s+$/g, '');
-			sessionId = data;
+			this.sessionId = data;
 		});
 
 	};
@@ -222,7 +223,7 @@ function ProvVisComm(provVis) {
 	this.removeCausalRelationship = function(relation) {
 		var query = server
 				+ "ProvenanceService?action=removeCausalRelationShip&session="
-				+ escape(sessionId) + "&relation=" + escape(relation);
+				+ escape(this.sessionId) + "&relation=" + escape(relation);
 		$.get(query, function(data) {
 			//Trim the data.
 			data = data.replace(/^\s+|\s+$/g, '');
@@ -234,7 +235,7 @@ function ProvVisComm(provVis) {
 	 */
 	this.removeNode = function(node) {
 		var query = server + "ProvenanceService?action=removeNode&session="
-				+ escape(sessionId) + "&node=" + escape(node);
+				+ escape(this.sessionId) + "&node=" + escape(node);
 		$.get(query, function(data) {
 			//Trim the data.
 			data = data.replace(/^\s+|\s+$/g, '');
