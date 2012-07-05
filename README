@@ -1,0 +1,5 @@
+The Provenance Visualisation uses Provenance Service to get the data from the server. 
+In future, conversion from PROV-O will be implemented.
+
+The demo for visualisation can be accessed here:
+http://mrt.esc.abdn.ac.uk:8080/ourspaces/testProvenance/provvisdemo.jsp
