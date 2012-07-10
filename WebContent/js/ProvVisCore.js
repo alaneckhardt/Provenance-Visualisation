@@ -126,9 +126,9 @@ function ProvVisCore(provVis) {
 		});
 
 		// Panning support
-		jsPlumb.draggable($(".agent"));
-		jsPlumb.draggable($(".artifact"));
-		jsPlumb.draggable($(".process"));
+		//jsPlumb.draggable($(".agent"));
+		//jsPlumb.draggable($(".artifact"));
+		//jsPlumb.draggable($(".process"));
 		$(".artifact").draggable();
 
 		if (document.getElementById(jsPlumb.canvas).addEventListener) {

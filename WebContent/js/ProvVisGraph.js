@@ -177,12 +177,11 @@ function ProvVisGraph(provVis) {
 		// anchor:"AutoDefault",
 		var anchors = [ [ 0.5, 0, 0, -1 ], [ 1, 0.5, 1, 0 ], [ 0.5, 1, 0, 1 ], [ 0, 0.5, -1, 0 ] ];
 		var text = typeVis;
-		if (typeof this.provenanceEditable != "undefined"
-				&& this.provenanceEditable == true) {
-			text += " <span style=\"display:block;float:right;\" class=\"delete\"><a href=\"#\" onclick=\"removeEdge('" + idTrim + "','" + escfrom + "','" + escto + "');\">x</a></span>";
-		} else {
-			text += " <span style=\"display:none;\" class=\"delete\"><a href=\"#\" onclick=\"removeEdge('"+ idTrim + "','"+ escfrom + "','"+ escto + "');\">x</a></span>";
-		}
+		//if (typeof this.provenanceEditable != "undefined"	&& this.provenanceEditable == true) {
+			text += " <span style=\"\" class=\"delete\"><a href=\"#\" onclick=\"removeEdge('" + idTrim + "','" + escfrom + "','" + escto + "');\">x</a></span>";
+		/*} else {
+			text += " <span style=\"\" class=\"delete disabled\"><a href=\"#\" onclick=\"removeEdge('"+ idTrim + "','"+ escfrom + "','"+ escto + "');\">x</a></span>";
+		}*/
 		var con = jsPlumb.connect({
 			source : escfrom,
 			target : escto,
@@ -606,7 +605,7 @@ function ProvVisGraph(provVis) {
 			// $('._jsPlumb_endpoint').draggable("disable");
 			$('._jsPlumb_endpoint').hide();
 			// Hide "x" at the edge name.
-			$('.delete').hide();
+			$('.delete').addClass("disabled");
 		}
 		// Shrink the div
 		// shrinkDiv(d, zoomLevel/10, jsPlumb.offsetX+jsPlumb.width/2,
@@ -635,7 +634,8 @@ function ProvVisGraph(provVis) {
 			$('._jsPlumb_endpoint').show();
 			jsPlumb.repaintEverything();
 			// Show "x" at the edge name.
-			$('.delete').show();
+			$('.delete').removeClass("disabled");
+			$("#"+jsPlumb.canvas).addClass("editable");
 			// Enable controls on the left
 			$('#endSessionCommit').removeAttr("disabled");
 			$('#endSessionRollback').removeAttr("disabled");
@@ -650,7 +650,8 @@ function ProvVisGraph(provVis) {
 			$('._jsPlumb_endpoint').hide();
 			jsPlumb.repaintEverything();
 			// Hide "x" at the edge name.
-			$('.delete').hide();
+			$('.delete').addClass("disabled");
+			$("#"+jsPlumb.canvas).removeClass("editable");
 			// Disable controls on the left
 			$('#endSessionCommit').attr("disabled", "disabled");
 			$('#endSessionRollback').attr("disabled", "disabled");
