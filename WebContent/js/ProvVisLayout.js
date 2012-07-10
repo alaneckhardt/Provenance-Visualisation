@@ -401,7 +401,7 @@ function ProvVisLayout(provVis) {
 	
 	this.provVis = provVis;
 	this.f;
-	alpha;
+	alpha = 0;
 	this.multiple = 3;
 	
 	this.layoutForce = function() {	

@@ -6,6 +6,50 @@ function ProvVisGraph(provVis) {
 	this.provVis = provVis;
 	this.zoomLevel = 10;
 	this.provenanceEditable = false;
+	this.hidden = false;
+	this.switchVisibility = function() {
+		if(this.hidden == false){
+			this.hideType(".selected", "");
+			this.hidden = true;
+		}
+		else{
+			this.hidden = false;
+			this.hideType(".selected", "checked");			
+		}
+	};
+	this.hideSelected = function() {
+		this.hideType(".selected", "");
+	};
+	this.showAll = function(){
+		this.hideType(".selected", "checked");
+	};
+	
+	this.hideType = function(selector, checked){
+		$(selector).each(function(index) {
+			if(checked != "checked"){
+				// Hide the div
+				$(this).hide();
+				// Hide endpoints and edges
+				var id = $(this).attr("id");
+				$("."+id).hide();
+				provVis.core.graph[$(this).attr("data-node")].hidden = true;
+			}
+			else{
+				// Show the div
+				$(this).show();
+				// Show endpoints and edges
+				var id = $(this).attr("id");
+				$("."+id).show();
+				provVis.core.graph[$(this).attr("data-node")].hidden = false;
+				var c = jsPlumb.getConnections({source:id});  
+				c = c.concat(jsPlumb.getConnections({target:id}));  
+				for(var con in c){
+					var connection = c[con];
+					connection.repaint();
+				}
+			}
+		});
+	};
 	/**
 	 * Zooming on mouse wheel event.
 	 * @param event

@@ -10,13 +10,7 @@ function ProvVisEdit(provVis){
 	this.disableEditing = function(data){
 		
 	};
-	this.hideSelected = function() {
-		this.hideType(".selected", "");
-	};
-	this.showAll = function(){
-		this.hideType(".selected", "checked");
-	};
-	
+		
 	this.initProvenance = function() { 
 	
 		loadProperties();
@@ -163,7 +157,7 @@ function ProvVisEdit(provVis){
 				  /*
 					 * check.click(this.function() { var selector =
 					 * '[data-fulltype="'+$(this.parentNode.parentNode).attr("data-class")+'"]';
-					 * var checked = $(this).attr("checked"); hideType(selector,
+					 * var checked = $(this).attr("checked"); provVis.graph.hideType(selector,
 					 * checked); });
 					 */
 				  // Append the checkbox just after the link.
@@ -173,32 +167,7 @@ function ProvVisEdit(provVis){
 			
 		};
 		
-		this.hideType = function(selector, checked){
-			$(selector).each(function(index) {
-				if(checked != "checked"){
-					// Hide the div
-					$(this).hide();
-					// Hide endpoints and edges
-					var id = $(this).attr("id");
-					$("."+id).hide();
-					provVis.core.graph[$(this).attr("data-node")].hidden = true;
-				}
-				else{
-					// Show the div
-					$(this).show();
-					// Show endpoints and edges
-					var id = $(this).attr("id");
-					$("."+id).show();
-					provVis.core.graph[$(this).attr("data-node")].hidden = false;
-					var c = jsPlumb.getConnections({source:id});  
-					c = c.concat(jsPlumb.getConnections({target:id}));  
-					for(var con in c){
-						var connection = c[con];
-						connection.repaint();
-					}
-				}
-			});
-		};
+		
 		
 		this.uncheck = function(el){
 			var ch = $(el).siblings('input'); 
@@ -214,7 +183,7 @@ function ProvVisEdit(provVis){
 			// Call the event explicitly.
 		    var selector = '[data-fulltype="'+type+'"]';
 			var checked = ch.attr("checked");
-			this.hideType(selector, checked);
+			provVis.graph.hideType(selector, checked);
 			var index = this.disabledTypes.indexOf(type); 
 			if(index==-1){
 				// Add new disabled type.
