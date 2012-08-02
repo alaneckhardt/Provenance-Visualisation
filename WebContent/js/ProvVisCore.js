@@ -148,7 +148,7 @@ function ProvVisCore(provVis) {
 		$("#" + this.provVis.jsPlumb.canvas).draggable({
 			stop : function() {
 				// Repaint correct position of the draggable endpoints.
-				this.provVis.jsPlumb.repaintEverything();
+				provVis.jsPlumb.repaintEverything();
 			}
 		});
 	};
@@ -250,7 +250,7 @@ function ProvVisCore(provVis) {
 				}
 			}
 			provVis.graph.shrinkEdges();
-			this.provVis.jsPlumb.repaintEverything();
+			provVis.jsPlumb.repaintEverything();
 
 			$('.info').hover(function() {
 				$(this).css('cursor', 'pointer');

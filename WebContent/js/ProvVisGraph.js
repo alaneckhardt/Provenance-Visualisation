@@ -97,7 +97,7 @@ function ProvVisGraph(provVis) {
 			// Repaint correct position of the draggable endpoints.
 			
 			//TODO - what repaint???!!!!!
-			this.provVis.jsPlumb.repaintEverything();
+			provVis.jsPlumb.repaintEverything();
 		}
 		/**
 		 * Prevent default actions caused by mouse wheel. That might be ugly,

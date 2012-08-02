@@ -261,10 +261,9 @@ canvas{
   margin:0px;
 }
 
-.controls{    
-	  background-color: wheat;
+.controls{   /*background-color: wheat;
     border: 1px solid;
-    display: none;    
+    display: block;    
     opacity: 1;
     position: relative;
     top: -20px;
@@ -272,12 +271,13 @@ canvas{
     width:150px;
     z-index: 100;
     border-radius:4px;
-    font-size: 11px;
-}
+    font-size: 11px;*/
+}   
+	
 .controls a {
-	color:red;
+	/*color:red;
 	font-weight: bold;
-	padding-left:5px;
+	padding-left:5px;*/
 }
 
 .controls a:hover{
