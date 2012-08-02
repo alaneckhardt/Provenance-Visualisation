@@ -108,47 +108,47 @@ function ProvVisCore(provVis) {
 			return uri.substring(0, uri.indexOf('/')-1);
 	};
 	this.initJsPlumb = function() {
-		jsPlumb.reset();
-		jsPlumb.ready(function() {
-			jsPlumb.Defaults.PaintStyle = {
+		this.provVis.jsPlumb.reset();
+		this.provVis.jsPlumb.ready(function() {
+			this.provVis.jsPlumb.Defaults.PaintStyle = {
 				lineWidth : 4,
 				strokeStyle : "#aaa"
 			};
-			jsPlumb.Defaults.Endpoint = [ "Dot", {
+			this.provVis.jsPlumb.Defaults.Endpoint = [ "Dot", {
 				radius : 10
 			}, {
 				isSource : true,
 				isTarget : true
 			} ];
-			jsPlumb.Defaults.MaxConnections = 10;
-			jsPlumb.Defaults.Container = $("#" + jsPlumb.canvas);
+			this.provVis.jsPlumb.Defaults.MaxConnections = 10;
+			this.provVis.jsPlumb.Defaults.Container = $("#" + this.provVis.jsPlumb.canvas);
 
 		});
 
 		// Panning support
-		//jsPlumb.draggable($(".agent"));
-		//jsPlumb.draggable($(".artifact"));
-		//jsPlumb.draggable($(".process"));
+		//this.provVis.jsPlumb.draggable($(".agent"));
+		//this.provVis.jsPlumb.draggable($(".artifact"));
+		//this.provVis.jsPlumb.draggable($(".process"));
 		$(".artifact").draggable();
 
-		if (document.getElementById(jsPlumb.canvas).addEventListener) {
+		if (document.getElementById(this.provVis.jsPlumb.canvas).addEventListener) {
 			var mousewheelevt = (/Firefox/i.test(navigator.userAgent)) ? "DOMMouseScroll"
 					: "mousewheel"; // FF doesn't recognize mousewheel as of
 									// FF3.x
 
-			if (document.getElementById(jsPlumb.canvas).attachEvent) // if IE (and Opera depending on user setting)
-				document.getElementById(jsPlumb.canvas).attachEvent(
+			if (document.getElementById(this.provVis.jsPlumb.canvas).attachEvent) // if IE (and Opera depending on user setting)
+				document.getElementById(this.provVis.jsPlumb.canvas).attachEvent(
 						"on" + mousewheelevt, wheel);
-			else if (document.getElementById(jsPlumb.canvas).addEventListener) // WC3 browsers
-				document.getElementById(jsPlumb.canvas).addEventListener(
+			else if (document.getElementById(this.provVis.jsPlumb.canvas).addEventListener) // WC3 browsers
+				document.getElementById(this.provVis.jsPlumb.canvas).addEventListener(
 						mousewheelevt, provVis.graph.wheel, false);
 
 			// window.addEventListener('DOMMouseScroll', wheel, false);
 		}
-		$("#" + jsPlumb.canvas).draggable({
+		$("#" + this.provVis.jsPlumb.canvas).draggable({
 			stop : function() {
 				// Repaint correct position of the draggable endpoints.
-				jsPlumb.repaintEverything();
+				this.provVis.jsPlumb.repaintEverything();
 			}
 		});
 	};
@@ -190,7 +190,7 @@ function ProvVisCore(provVis) {
 	};
 
 	this.checkExistsEdge = function(id, from, to) {
-		// var con = jsPlumb.getConnections({ source:from, target:to});
+		// var con = this.provVis.jsPlumb.getConnections({ source:from, target:to});
 		if ($("." + from + "." + to).size() == 0)
 			return false;
 		if ($("." + from + "." + to + "[data-id='" + id + "']").size() > 0)
@@ -250,7 +250,7 @@ function ProvVisCore(provVis) {
 				}
 			}
 			provVis.graph.shrinkEdges();
-			jsPlumb.repaintEverything();
+			this.provVis.jsPlumb.repaintEverything();
 
 			$('.info').hover(function() {
 				$(this).css('cursor', 'pointer');
@@ -307,7 +307,7 @@ function ProvVisCore(provVis) {
 				this.graph.push(node);
 				var d = provVis.graph.createElement(node);
 				if (d != null)
-					provVis.graph.shrinkDiv(d, provVis.graph.zoomLevel / 10, jsPlumb.offsetX+ jsPlumb.width / 2, jsPlumb.offsetY + jsPlumb.height / 2);
+					provVis.graph.shrinkDiv(d, provVis.graph.zoomLevel / 10, this.provVis.jsPlumb.offsetX+ this.provVis.jsPlumb.width / 2, this.provVis.jsPlumb.offsetY + this.provVis.jsPlumb.height / 2);
 			}
 		} catch (err) {
 			alert(err);
@@ -335,12 +335,19 @@ function ProvVisCore(provVis) {
 	this.removeEdge = function(edgeId) {
 		for ( var x in this.graph) {
 			var node = this.graph[x];
-			if (node.id == nodeId){
-				this.graph[x] = new Object();
-				provVis.comm.removeCausalRelationship(edgeId);
-				return;
+			//var found = false;
+			var y;
+			for (y in node.adjacencies) {
+				var adj = node.adjacencies[y];
+				if (adj.id == edgeId){
+					//found = true;
+					node.adjacencies = node.adjacencies.splice(y,1);
+					break;
+				}
 			}
+			//if(found)
 		}
+		provVis.comm.removeCausalRelationship(edgeId);
 	};
 	/**
 	 * @param sessionId id of the session

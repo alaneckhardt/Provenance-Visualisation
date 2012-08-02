@@ -41,8 +41,8 @@ function ProvVisGraph(provVis) {
 				var id = $(this).attr("id");
 				$("."+id).show();
 				provVis.core.graph[$(this).attr("data-node")].hidden = false;
-				var c = jsPlumb.getConnections({source:id});  
-				c = c.concat(jsPlumb.getConnections({target:id}));  
+				var c = this.provVis.jsPlumb.getConnections({source:id});  
+				c = c.concat(this.provVis.jsPlumb.getConnections({target:id}));  
 				for(var con in c){
 					var connection = c[con];
 					connection.repaint();
@@ -76,8 +76,8 @@ function ProvVisGraph(provVis) {
 			var multiple = 1.5;
 			if (delta < 0)
 				multiple = 1 / 1.5;
-			var centerX = event.pageX - $("#" + jsPlumb.canvas).offset().left;
-			var centerY = event.pageY - $("#" + jsPlumb.canvas).offset().top;
+			var centerX = event.pageX - $("#" + this.provVis.jsPlumb.canvas).offset().left;
+			var centerY = event.pageY - $("#" + this.provVis.jsPlumb.canvas).offset().top;
 			// Limit the zooming.
 			if ((provVis.graph.zoomLevel > 30 && multiple > 1)
 					|| (provVis.graph.zoomLevel < 3 && multiple < 1))
@@ -86,8 +86,8 @@ function ProvVisGraph(provVis) {
 
 			provVis.graph.shrinkEdges();
 			/*
-			 * $('._jsPlumb_endpoint').each(function(index) {
-			 * jsPlumb.repaint($(this));//Everything });
+			 * $('._provVis.jsPlumb_endpoint').each(function(index) {
+			 * this.provVis.jsPlumb.repaint($(this));//Everything });
 			 */
 
 			$('.shape').each(function(index) {
@@ -95,7 +95,9 @@ function ProvVisGraph(provVis) {
 			});
 
 			// Repaint correct position of the draggable endpoints.
-			jsPlumb.repaintEverything();
+			
+			//TODO - what repaint???!!!!!
+			this.provVis.jsPlumb.repaintEverything();
 		}
 		/**
 		 * Prevent default actions caused by mouse wheel. That might be ugly,
@@ -178,11 +180,11 @@ function ProvVisGraph(provVis) {
 		var anchors = [ [ 0.5, 0, 0, -1 ], [ 1, 0.5, 1, 0 ], [ 0.5, 1, 0, 1 ], [ 0, 0.5, -1, 0 ] ];
 		var text = typeVis;
 		//if (typeof this.provenanceEditable != "undefined"	&& this.provenanceEditable == true) {
-			text += " <span style=\"\" class=\"delete\"><a href=\"#\" onclick=\"removeEdge('" + idTrim + "','" + escfrom + "','" + escto + "');\">x</a></span>";
+			text += " <span style=\"\" class=\"delete\"><a href=\"#\" onclick=\"provVis.graph.removeEdge('" + idTrim + "','" + escfrom + "','" + escto + "');\">x</a></span>";
 		/*} else {
 			text += " <span style=\"\" class=\"delete disabled\"><a href=\"#\" onclick=\"removeEdge('"+ idTrim + "','"+ escfrom + "','"+ escto + "');\">x</a></span>";
 		}*/
-		var con = jsPlumb.connect({
+		var con = this.provVis.jsPlumb.connect({
 			source : escfrom,
 			target : escto,
 			dynamicAnchors : anchors,
@@ -218,7 +220,7 @@ function ProvVisGraph(provVis) {
 	this.removeElement = function(nodeId) {
 		var r = confirm("Really delete the node and all its connections?");
 		if (r == true) {
-			jsPlumb.removeAllEndpoints(provVis.core.getLocalName(nodeId));
+			this.provVis.jsPlumb.removeAllEndpoints(provVis.core.getLocalName(nodeId));
 			var e = $('#' + provVis.core.getLocalName(nodeId));
 			// Set json to empty object
 			provVis.core.removeNode(nodeId);
@@ -243,8 +245,8 @@ function ProvVisGraph(provVis) {
 		if (r == true) {
 			provVis.core.removeEdge(id);
 			// var c =
-			// jsPlumb.getConnections({source:sourceId,target:targetId});
-			jsPlumb.detach(sourceId, targetId);
+			// this.provVis.jsPlumb.getConnections({source:sourceId,target:targetId});
+			this.provVis.jsPlumb.detach(sourceId, targetId);
 		}
 	};
 
@@ -277,13 +279,13 @@ function ProvVisGraph(provVis) {
 		$(div).css('font-size', newFontSize);
 
 		// Shrink the endpoint
-		jsPlumb.Defaults.Endpoint = [ "Dot", {
+		this.provVis.jsPlumb.Defaults.Endpoint = [ "Dot", {
 			radius : this.zoomLevel
 		}, {
 			isSource : true,
 			isTarget : true
 		} ];
-		var endpoint = jsPlumb.getEndpoint("end-" + $(div).attr("id"));
+		var endpoint = this.provVis.jsPlumb.getEndpoint("end-" + $(div).attr("id"));
 		w = $(endpoint.canvas).width();
 		endpoint.setPaintStyle({
 			radius : this.zoomLevel,
@@ -304,8 +306,8 @@ function ProvVisGraph(provVis) {
 		$(div).children(".controls").css("left", $(div).width());
 		$(div).children(".controls").css("top", "-" + $(div).height());
 
-		// jsPlumb.repaint($(div));//Everything
-		// jsPlumb.repaint(endpoint);//Everything
+		// this.provVis.jsPlumb.repaint($(div));//Everything
+		// this.provVis.jsPlumb.repaint(endpoint);//Everything
 	};
 
 	/**
@@ -342,9 +344,9 @@ function ProvVisGraph(provVis) {
 
 		dInner.css("z-index", "4");
 		dInner.html("<p style=\"padding: 0.1em 0;\">" + node.title + "</p>");
-		var w = jsPlumb.width, h = jsPlumb.height;
-		var x = jsPlumb.offsetX + (0.1 * w)	+ Math.floor(Math.random() * (0.8 * w));
-		var y = jsPlumb.offsetY + (0.1 * h)	+ Math.floor(Math.random() * (0.8 * h));
+		var w = this.provVis.jsPlumb.width, h = this.provVis.jsPlumb.height;
+		var x = this.provVis.jsPlumb.offsetX + (0.1 * w)	+ Math.floor(Math.random() * (0.8 * w));
+		var y = this.provVis.jsPlumb.offsetY + (0.1 * h)	+ Math.floor(Math.random() * (0.8 * h));
 		dInner.css("top", y + 'px');
 		dInner.css("left", x + 'px');
 
@@ -419,7 +421,7 @@ function ProvVisGraph(provVis) {
 		// var edgeName = edge.edge;
 		var escId = provVis.core.getLocalName(obj.id);
 		$("#" + escId + " p").droppable({
-			scope : jsPlumb.Defaults.Scope,
+			scope : this.provVis.jsPlumb.Defaults.Scope,
 			drop : function(event, ui) {
 				// Create the new connection with the new
 				// endpoint
@@ -483,10 +485,10 @@ function ProvVisGraph(provVis) {
 		div.css("top", $("#" + escId).css("top"));
 		div.css("z-index", "1000");
 		div.html(txt);
-		$("#" + jsPlumb.canvas).append(div);
+		$("#" + this.provVis.jsPlumb.canvas).append(div);
 
 		// Set paint style of the endpoint of the node.
-		var endpoint = jsPlumb.getEndpoint("end-" + escId);
+		var endpoint = this.provVis.jsPlumb.getEndpoint("end-" + escId);
 		endpoint.setPaintStyle({
 			fillStyle : "orange",
 			outlineColor : "black",
@@ -509,10 +511,10 @@ function ProvVisGraph(provVis) {
 
 		var d = this.getElementDiv(node);
 		var escId = provVis.core.getLocalName(node.id);
-		$("#" + jsPlumb.canvas).append(d);
+		$("#" + this.provVis.jsPlumb.canvas).append(d);
 		// Draggable endpoint.
 		this.setClasses(escId + " _jsPlumb_endpoint");
-		var endpoint = jsPlumb.addEndpoint(d, {
+		var endpoint = this.provVis.jsPlumb.addEndpoint(d, {
 			anchor : "BottomCenter"
 		}, {
 			uuid : "end-" + escId,
@@ -525,11 +527,11 @@ function ProvVisGraph(provVis) {
 			maxConnections : 20,
 			// TODO check the edges
 			dragOptions : {
-				scope : jsPlumb.Defaults.Scope,
+				scope : this.provVis.jsPlumb.Defaults.Scope,
 				start : function(e, ui) {
 					// Repaint needed to address the problem with scrolling the
 					// whole page and then dragging
-					var cons = jsPlumb.getConnections();
+					var cons = this.provVis.jsPlumb.getConnections();
 					for ( var c in cons) {
 						var con = cons[c];
 						con.repaint();
@@ -565,7 +567,7 @@ function ProvVisGraph(provVis) {
 					// Erase all stylings
 					for ( var y in provVis.core.graph) {
 						var obj = provVis.core.graph[y];
-						var endpoint = jsPlumb.getEndpoint("end-" + provVis.core.getLocalName(obj.id));
+						var endpoint = this.provVis.jsPlumb.getEndpoint("end-" + provVis.core.getLocalName(obj.id));
 						endpoint.setPaintStyle({
 							fillStyle : "#aaa",
 							radius : provVis.graph.zoomLevel
@@ -583,7 +585,7 @@ function ProvVisGraph(provVis) {
 
 		var id = provVis.core.getLocalName(node.id), _d = jsPlumb.CurrentLibrary.getElementObject(d);
 		jsPlumb.CurrentLibrary.setAttribute(_d, "id", id);
-		jsPlumb.draggable(d);
+		this.provVis.jsPlumb.draggable(d);
 
 		d.click(function() {
 			d.toggleClass("selected");
@@ -608,20 +610,20 @@ function ProvVisGraph(provVis) {
 			$('.delete').addClass("disabled");
 		}
 		// Shrink the div
-		// shrinkDiv(d, zoomLevel/10, jsPlumb.offsetX+jsPlumb.width/2,
-		// jsPlumb.offsetY+jsPlumb.height/2);
+		// shrinkDiv(d, zoomLevel/10, this.provVis.jsPlumb.offsetX+this.provVis.jsPlumb.width/2,
+		// this.provVis.jsPlumb.offsetY+this.provVis.jsPlumb.height/2);
 		return d;
 	};
 
 	/**
-	 * Set class to all jsPlumb entities. Useful for showing the canvases back after they were hidden.
+	 * Set class to all provVis.jsPlumb entities. Useful for showing the canvases back after they were hidden.
 	 * 
 	 * @param id
 	 */
 	this.setClasses = function(id) {
-		jsPlumb.connectorClass = id;
-		jsPlumb.endpointClass = id;
-		jsPlumb.overlayClass = id;
+		this.provVis.jsPlumb.connectorClass = id;
+		this.provVis.jsPlumb.endpointClass = id;
+		this.provVis.jsPlumb.overlayClass = id;
 	};
 
 	/**
@@ -632,10 +634,10 @@ function ProvVisGraph(provVis) {
 		if (this.provenanceEditable == true) {
 			// Enable creating new connections.
 			$('._jsPlumb_endpoint').show();
-			jsPlumb.repaintEverything();
+			this.provVis.jsPlumb.repaintEverything();
 			// Show "x" at the edge name.
 			$('.delete').removeClass("disabled");
-			$("#"+jsPlumb.canvas).addClass("editable");
+			$("#"+this.provVis.jsPlumb.canvas).addClass("editable");
 			// Enable controls on the left
 			$('#endSessionCommit').removeAttr("disabled");
 			$('#endSessionRollback').removeAttr("disabled");
@@ -648,10 +650,10 @@ function ProvVisGraph(provVis) {
 		if (this.provenanceEditable == false) {
 			// Disable creating new connections.
 			$('._jsPlumb_endpoint').hide();
-			jsPlumb.repaintEverything();
+			this.provVis.jsPlumb.repaintEverything();
 			// Hide "x" at the edge name.
 			$('.delete').addClass("disabled");
-			$("#"+jsPlumb.canvas).removeClass("editable");
+			$("#"+this.provVis.jsPlumb.canvas).removeClass("editable");
 			// Disable controls on the left
 			$('#endSessionCommit').attr("disabled", "disabled");
 			$('#endSessionRollback').attr("disabled", "disabled");

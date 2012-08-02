@@ -20,5 +20,6 @@ function ProvVis() {
 	this.comm = new ProvVisComm(this);
 	this.layout = new ProvVisLayout(this);	
 	this.edit = new ProvVisEdit(this);	
+	this.jsPlumb = jsPlumb.getInstance();
 }
 provVis = new ProvVis();

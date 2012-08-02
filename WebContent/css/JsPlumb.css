@@ -9,7 +9,7 @@
 
 #left-container, 
 #right-container, 
-#center-container {
+.center-container {
     height:600px;
     top:0;
     opacity: 1;
@@ -47,7 +47,7 @@
     text-indent:8px;
 }
 
-#center-container {
+.center-container {
     width:595px;
     background-color:white;
     color:#ccc;

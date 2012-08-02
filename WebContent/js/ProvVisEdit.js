@@ -43,11 +43,11 @@ function ProvVisEdit(provVis){
 			$("#ArtifactsDisableList").treeview({collapsed : true});
 			$("#AgentsDisableList").treeview({collapsed : true});
 			
-			$("#center-container").resizable({
+			$(".center-container").resizable({
 				maxWidth: 945,
 				resize: function(event, ui) {
-					jsPlumb.width = ui.size.width-115, 
-					jsPlumb.height = ui.size.height-40;
+					this.provVis.jsPlumb.width = ui.size.width-115, 
+					this.provVis.jsPlumb.height = ui.size.height-40;
 				}
 			});
 			

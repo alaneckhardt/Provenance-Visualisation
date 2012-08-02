@@ -21,7 +21,7 @@ function ProvVisLayout(provVis) {
   this.maxVertexMovement = 60.0;  
 
 
- // jsPlumb.width = 540, jsPlumb.height = 530, jsPlumb.offsetX=1200, jsPlumb.offsetY=1020;
+ // this.provVis.jsPlumb.width = 540, this.provVis.jsPlumb.height = 530, this.provVis.jsPlumb.offsetX=1200, this.provVis.jsPlumb.offsetY=1020;
 
   
 	this.layoutPrepare = function() {
@@ -357,10 +357,10 @@ function ProvVisLayout(provVis) {
   this.resize = function(){
       var minx = Infinity, maxx = -Infinity, miny = Infinity, maxy = -Infinity;
 
-		$("#"+jsPlumb.canvas).css("left",-jsPlumb.offsetX+"px");
-		$("#"+jsPlumb.canvas).css("top",-jsPlumb.offsetY+"px");
-		//jsPlumb.height = $("#"+jsPlumb.canvas).height();
-		//jsPlumb.width = $("#"+jsPlumb.canvas).width();
+		$("#"+this.provVis.jsPlumb.canvas).css("left",-this.provVis.jsPlumb.offsetX+"px");
+		$("#"+this.provVis.jsPlumb.canvas).css("top",-this.provVis.jsPlumb.offsetY+"px");
+		//this.provVis.jsPlumb.height = $("#"+this.provVis.jsPlumb.canvas).height();
+		//this.provVis.jsPlumb.width = $("#"+this.provVis.jsPlumb.canvas).width();
 		
       for (i in provVis.core.graph) {
           if(!provVis.core.testVisible(provVis.core.graph[i]))
@@ -379,15 +379,15 @@ function ProvVisLayout(provVis) {
           	continue;
           var d = $("#"+provVis.core.getLocalName(node.id));
           if(maxy==miny)
-          	;//d.css("top",(jsPlumb.offsetY+jsPlumb.height*(1)/(2)) + 'px');
+          	;//d.css("top",(this.provVis.jsPlumb.offsetY+this.provVis.jsPlumb.height*(1)/(2)) + 'px');
           else
-          	d.css("top",(jsPlumb.offsetY+jsPlumb.height*(node.layoutPosY-miny)/(maxy-miny)) + 'px');
+          	d.css("top",(this.provVis.jsPlumb.offsetY+this.provVis.jsPlumb.height*(node.layoutPosY-miny)/(maxy-miny)) + 'px');
           if(maxx==minx)
-          	d.css("left", (jsPlumb.offsetX+(jsPlumb.width-100)*(1)/(3)) + 'px');
+          	d.css("left", (this.provVis.jsPlumb.offsetX+(this.provVis.jsPlumb.width-100)*(1)/(3)) + 'px');
           else
-          	d.css("left", (jsPlumb.offsetX+(jsPlumb.width-100)*(node.layoutPosX-minx)/(maxx-minx)) + 'px');		
+          	d.css("left", (this.provVis.jsPlumb.offsetX+(this.provVis.jsPlumb.width-100)*(node.layoutPosX-minx)/(maxx-minx)) + 'px');		
       }
-		jsPlumb.repaintEverything();//Everything
+		this.provVis.jsPlumb.repaintEverything();//Everything
   };
 	/**
 	 * Layout the graph
