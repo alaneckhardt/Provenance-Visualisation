@@ -108,21 +108,20 @@ function ProvVisCore(provVis) {
 			return uri.substring(0, uri.indexOf('/')-1);
 	};
 	this.initJsPlumb = function() {
-		this.provVis.jsPlumb.reset();
+		this.provVis.jsPlumb.reset();	
 		this.provVis.jsPlumb.ready(function() {
 			this.provVis.jsPlumb.Defaults.PaintStyle = {
-				lineWidth : 4,
-				strokeStyle : "#aaa"
-			};
+					lineWidth : 4,
+					strokeStyle : "#aaa"
+				};
 			this.provVis.jsPlumb.Defaults.Endpoint = [ "Dot", {
-				radius : 10
-			}, {
-				isSource : true,
-				isTarget : true
-			} ];
+					radius : 10
+				}, {
+					isSource : true,
+					isTarget : true
+				} ];
 			this.provVis.jsPlumb.Defaults.MaxConnections = 10;
 			this.provVis.jsPlumb.Defaults.Container = $("#" + this.provVis.jsPlumb.canvas);
-
 		});
 
 		// Panning support
@@ -138,7 +137,7 @@ function ProvVisCore(provVis) {
 
 			if (document.getElementById(this.provVis.jsPlumb.canvas).attachEvent) // if IE (and Opera depending on user setting)
 				document.getElementById(this.provVis.jsPlumb.canvas).attachEvent(
-						"on" + mousewheelevt, wheel);
+						"on" + mousewheelevt, this.provVis.graph.wheel);
 			else if (document.getElementById(this.provVis.jsPlumb.canvas).addEventListener) // WC3 browsers
 				document.getElementById(this.provVis.jsPlumb.canvas).addEventListener(
 						mousewheelevt, provVis.graph.wheel, false);

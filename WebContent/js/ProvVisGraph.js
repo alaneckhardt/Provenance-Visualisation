@@ -41,8 +41,8 @@ function ProvVisGraph(provVis) {
 				var id = $(this).attr("id");
 				$("."+id).show();
 				provVis.core.graph[$(this).attr("data-node")].hidden = false;
-				var c = this.provVis.jsPlumb.getConnections({source:id});  
-				c = c.concat(this.provVis.jsPlumb.getConnections({target:id}));  
+				var c = provVis.jsPlumb.getConnections({source:id});  
+				c = c.concat(provVis.jsPlumb.getConnections({target:id}));  
 				for(var con in c){
 					var connection = c[con];
 					connection.repaint();
@@ -76,8 +76,8 @@ function ProvVisGraph(provVis) {
 			var multiple = 1.5;
 			if (delta < 0)
 				multiple = 1 / 1.5;
-			var centerX = event.pageX - $("#" + this.provVis.jsPlumb.canvas).offset().left;
-			var centerY = event.pageY - $("#" + this.provVis.jsPlumb.canvas).offset().top;
+			var centerX = event.pageX - $("#" + provVis.jsPlumb.canvas).offset().left;
+			var centerY = event.pageY - $("#" + provVis.jsPlumb.canvas).offset().top;
 			// Limit the zooming.
 			if ((provVis.graph.zoomLevel > 30 && multiple > 1)
 					|| (provVis.graph.zoomLevel < 3 && multiple < 1))
@@ -90,7 +90,7 @@ function ProvVisGraph(provVis) {
 			 * this.provVis.jsPlumb.repaint($(this));//Everything });
 			 */
 
-			$('.shape').each(function(index) {
+			$("#"+provVis.jsPlumb.canvas+" .shape").each(function(index) {
 				provVis.graph.shrinkDiv(this, multiple, centerX, centerY);
 			});
 
@@ -286,6 +286,9 @@ function ProvVisGraph(provVis) {
 			isTarget : true
 		} ];
 		var endpoint = this.provVis.jsPlumb.getEndpoint("end-" + $(div).attr("id"));
+		if(typeof endpoint == 'undefined' || endpoint == null)
+			return;
+		
 		w = $(endpoint.canvas).width();
 		endpoint.setPaintStyle({
 			radius : this.zoomLevel,
@@ -303,8 +306,8 @@ function ProvVisGraph(provVis) {
 			$(div).children(".info").children("a").children("img").height(w * multiple);
 		}
 		// Shift the controls to the right
-		$(div).children(".controls").css("left", $(div).width());
-		$(div).children(".controls").css("top", "-" + $(div).height());
+		//$(div).children(".controls").css("left", $(div).width());
+		//$(div).children(".controls").css("top", "-" + $(div).height());
 
 		// this.provVis.jsPlumb.repaint($(div));//Everything
 		// this.provVis.jsPlumb.repaint(endpoint);//Everything
@@ -323,7 +326,7 @@ function ProvVisGraph(provVis) {
 		// var currentFontSize = $("._jsPlumb_overlay.label").css('font-size');
 		// var currentFontSizeNum = parseFloat(currentFontSize, 10);
 		var newFontSize = 14 * this.zoomLevel / 10;
-		$("._jsPlumb_overlay.label").css('font-size', newFontSize);
+		$("#"+provVis.jsPlumb.canvas+" ._jsPlumb_overlay.label").css('font-size', newFontSize);
 	};
 
 
@@ -489,6 +492,9 @@ function ProvVisGraph(provVis) {
 
 		// Set paint style of the endpoint of the node.
 		var endpoint = this.provVis.jsPlumb.getEndpoint("end-" + escId);
+		if(typeof endpoint == 'undefined' || endpoint == null)
+			return;
+		
 		endpoint.setPaintStyle({
 			fillStyle : "orange",
 			outlineColor : "black",
@@ -531,7 +537,7 @@ function ProvVisGraph(provVis) {
 				start : function(e, ui) {
 					// Repaint needed to address the problem with scrolling the
 					// whole page and then dragging
-					var cons = this.provVis.jsPlumb.getConnections();
+					var cons = provVis.jsPlumb.getConnections();
 					for ( var c in cons) {
 						var con = cons[c];
 						con.repaint();
@@ -567,7 +573,9 @@ function ProvVisGraph(provVis) {
 					// Erase all stylings
 					for ( var y in provVis.core.graph) {
 						var obj = provVis.core.graph[y];
-						var endpoint = this.provVis.jsPlumb.getEndpoint("end-" + provVis.core.getLocalName(obj.id));
+						var endpoint = provVis.jsPlumb.getEndpoint("end-" + provVis.core.getLocalName(obj.id));
+						if(typeof endpoint == 'undefined' || endpoint == null)
+							continue;
 						endpoint.setPaintStyle({
 							fillStyle : "#aaa",
 							radius : provVis.graph.zoomLevel

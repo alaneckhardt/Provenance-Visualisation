@@ -46,8 +46,8 @@ function ProvVisEdit(provVis){
 			$(".center-container").resizable({
 				maxWidth: 945,
 				resize: function(event, ui) {
-					this.provVis.jsPlumb.width = ui.size.width-115, 
-					this.provVis.jsPlumb.height = ui.size.height-40;
+					provVis.jsPlumb.width = ui.size.width-115, 
+					provVis.jsPlumb.height = ui.size.height-40;
 				}
 			});
 			
