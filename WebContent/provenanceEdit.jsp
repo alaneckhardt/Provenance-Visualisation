@@ -2,13 +2,24 @@
 <%@page import="javax.swing.event.ListSelectionEvent"%>
 <%@ page language="java" import="com.hp.hpl.jena.rdf.model.Model, java.util.Iterator,java.util.*,java.text.SimpleDateFormat,java.util.ArrayList,java.io.*,java.net.*,java.util.Vector,provenanceService.*" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-    <%
+    
+<%
+	if (session.isNew() == true) {
+%>
+<jsp:forward page="../error.jsp" />
+<%
+	}
+	if (session.getAttribute("use") == null) {
+%>
+<jsp:forward page="../error.jsp" />
+<%
+	}
+
 ParameterHelper parHelp = new ParameterHelper(request, session);
 
 String resource = (String) parHelp.getParameter("resource","");
 String editable = (String) parHelp.getParameter("editable","false");
 %>
-
 
 <link type="text/css" rel="stylesheet" media="all" href="/ourspaces/table.css" />
 <link href="/ourspaces/jqueryFileTree.css" rel="stylesheet" type="text/css" media="screen" />
@@ -17,97 +28,53 @@ String editable = (String) parHelp.getParameter("editable","false");
 <link type="text/css"	href="/ProvenanceService/css/ForceDirected.css" rel="stylesheet" />
 <link rel="stylesheet" type="text/css" href="./css/jquery.treeview.css" />
 <!-- <link type="text/css"	href="./css/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />-->
- <script type="text/javascript"	src="/ProvenanceService/js/jquery-1.6.2.min.js"></script>
-<script type="text/javascript"	src="/ProvenanceService/js/jquery.qtip-1.0.0-rc3.min.js"></script>
+
+<!-- <script type="text/javascript"	src="/ProvenanceService/js/jquery-1.6.2.min.js"></script>
+<script type="text/javascript"	src="/ProvenanceService/js/jquery.qtip-1.0.0-rc3.min.js"></script>-->
 <script type="text/javascript"	src="/ProvenanceService/js/jquery.jsPlumb-1.3.3-all.js"></script>
 
 <!-- Custom files -->
+<!--
 <script type="text/javascript"	src="/ProvenanceService/js/seedrandom.js"></script>
 <script type="text/javascript"	src="/ProvenanceService/js/init.js"></script>
 <script type="text/javascript"	src="/ProvenanceService/js/graphOperations.js"></script>
 <script type="text/javascript"	src="/ProvenanceService/js/customJsPlumb.js"></script>
 <script type="text/javascript"	src="/ProvenanceService/js/customJsPlumbSpring.js"></script>
+-->
+<script type="text/javascript"	src="/ProvenanceService/js/seedrandom.js"></script>
+<script type="text/javascript"	src="/ProvenanceService/js/init.js"></script>
+<script type="text/javascript"	src="/ProvenanceService/js/ProvVisGraph.js"></script>
+<script type="text/javascript"	src="/ProvenanceService/js/ProvVisComm.js"></script>
+<script type="text/javascript"	src="/ProvenanceService/js/ProvVisLayout.js"></script>
+<script type="text/javascript"	src="/ProvenanceService/js/ProvVisCore.js"></script>
+<script type="text/javascript"	src="/ProvenanceService/js/ProvVisEdit.js"></script>
+<script type="text/javascript"	src="/ProvenanceService/js/ProvVis.js"></script>
+
 <script type="text/javascript"  src="/ProvenanceService/js/jquery-ui-1.8.16.custom.min.js"></script>
 <script type="text/javascript" src="/ProvenanceService/js/jquery.treeview.js"></script>
-
-<script type="text/javascript"  src="/ProvenanceService/js/provenanceEdit.js"></script>
 
 <script>
 artifactId = '<%=resource%>';
 $(document).ready(function(){
-	jsPlumb.canvas = "infovisEdit";
-	initJsPlumb();
-	initProvenance();
+	provVis.jsPlumb.canvas = "infovisEdit";
+	provVis.core.initJsPlumb();
+	provVis.edit.initProvenance();
 	provenanceInit = true;
 	//Load the provenance of resource from request
-	loadProvenance(resource);
-	jsPlumb.width = 495, jsPlumb.height = 165, jsPlumb.offsetX=1000, jsPlumb.offsetY=1000;
-	jsPlumb.width = $("#center-container").width()-115, 
-	jsPlumb.height = $("#center-container").height()-40;
+	provVis.core.loadProvenance(resource);
+	provVis.jsPlumb.width = 495, provVis.jsPlumb.height = 165, provVis.jsPlumb.offsetX=1000, provVis.jsPlumb.offsetY=1000;
+	
+	provVis.jsPlumb.width = $(".center-container").width()-115, 
+	provVis.jsPlumb.height = $(".center-container").height()-40;
 	//$("#filtering").draggable();
 });
-jsPlumb.canvas = "infovisEdit";
-provenanceEditable = true;
+provVis.jsPlumb.canvas = "infovisEdit";
+provVis.graph.provenanceEditable = false;
 var superclasses = new Object();
 var subclasses = new Object();
-var disabledTypes = [];
-var json = [];
+provVis.core.graph = [];
 var resource = '<%=resource %>';
 
-function loadAllProvenance(){
-	var query = serverVisual+"getAllProvenance.jsp";
-		$.get(query, function(data) {
-			//Trim the data.
-			data = data.replace(/^\s+|\s+$/g, '') ;
-			var graph =  eval('(' + data + ')');
-			for(var x in graph){
-				var node = graph[x];
-				try{
-					var node2 = findNode(node.id);
-					//Append the new node to the list of nodes.
-					if(node2 == null){
-						json.push(node);
-						var d = createElement(node);
-						if(d!=null)
-							shrinkDiv(d, zoomLevel/10, jsPlumb.offsetX+jsPlumb.width/2, jsPlumb.offsetY+jsPlumb.height/2);
-					}
-				}
-				catch(err)
-				  {
-				  	alert(err);
-				  }
-			}
-			for(x in graph){
-				var node = graph[x];
-				for(var y in node.adjacencies){
-					var adj = node.adjacencies[y];
-					addEdge(adj, adj.to);
-					addEdge(adj, adj.from);
-				}
-				
-				for(var y in node.adjacencies){
-					var adj = node.adjacencies[y];		
-					displayRelationship(adj.id,adj.type, adj.from, adj.to);
-				}
-			}
-			shrinkEdges();
-			jsPlumb.repaintEverything();
-
-			$('.info').hover(function() {
-				 $(this).css('cursor','pointer');
-				 }, function() {
-				 $(this).css('cursor','auto');
-				});
-			$('.trigger').hover(function() {
-				 $(this).css('cursor','pointer');
-				 }, function() {
-				 $(this).css('cursor','auto');
-				});
-			
-			//layout();
-			initProvDiplay();	
-		});
-}
 <jsp:include page="js/edges.jsp"	flush="false">
 	<jsp:param value="location" name="id"/>
 	<jsp:param value="false" name="controls"/>
@@ -125,7 +92,7 @@ function loadAllProvenance(){
 
 		
 		//Init the graph
-		/*$("#center-container").droppable({
+		/*$(".center-container").droppable({
 			drop: function( event, ui ) {
 				var title = ui.draggable.text();
 				title = title.replace(/^\s+|\s+$/g, '');
@@ -136,7 +103,7 @@ function loadAllProvenance(){
 			<div id="ProcessesDisableList" title="Processes List" style="display:none">
 				<jsp:include page="getResourcesTypes.jsp" >
 		              	<jsp:param value="http://openprovenance.org/ontology#Process" name="className"/>
-		              	<jsp:param value="uncheck(this)" name="onClick"/>
+		              	<jsp:param value="provVis.edit.uncheck(this)" name="onClick"/>
 		              	<jsp:param value="navigationType" name="ulId"/>	
 		              	<jsp:param value="text-align:left" name="ulStyle"/>
 		              	<jsp:param value="true" name="includeFirst"/>
@@ -146,7 +113,7 @@ function loadAllProvenance(){
 			<div id="ArtifactsDisableList" title="Artifacts List" style="display:none">
 				<jsp:include page="getResourcesTypes.jsp" >
 		              	<jsp:param value="http://openprovenance.org/ontology#Artifact" name="className"/>
-		              	<jsp:param value="uncheck(this)" name="onClick"/>
+		              	<jsp:param value="provVis.edit.uncheck(this)" name="onClick"/>
 		              	<jsp:param value="navigationType" name="ulId"/>	
 		              	<jsp:param value="text-align:left" name="ulStyle"/>
 		              	<jsp:param value="true" name="includeFirst"/>
@@ -155,7 +122,7 @@ function loadAllProvenance(){
 			<div id="AgentsDisableList" title="Agents List" style="display:none">
 				<jsp:include page="getResourcesTypes.jsp" >
 		              	<jsp:param value="http://openprovenance.org/ontology#Agent" name="className"/>
-		              	<jsp:param value="uncheck(this)" name="onClick"/>
+		              	<jsp:param value="provVis.edit.uncheck(this)" name="onClick"/>
 		              	<jsp:param value="navigationType" name="ulId"/>	
 		              	<jsp:param value="text-align:left" name="ulStyle"/>
 		              	<jsp:param value="true" name="includeFirst"/>
@@ -163,27 +130,27 @@ function loadAllProvenance(){
 		  </div>
 			<div id="ProcessesList" title="Processes List" style="display:none">
 			<ul>
-			  <li><a style="float:left;" onclick="addProcess('http://openprovenance.org/ontology#Process');$('#ProcessesList').dialog('close');" href="#">Process</a><br></li></ul>
+			  <li><a style="float:left;" onclick="provVis.comm.addProcess('http://openprovenance.org/ontology#Process');$('#ProcessesList').dialog('close');" href="#">Process</a><br></li></ul>
 			  <jsp:include page="getResourcesTypes.jsp" >
 		              	<jsp:param value="http://openprovenance.org/ontology#Process" name="className"/>
-		              	<jsp:param value="addProcess('http://www.policygrid.org/provenance-generic.owl##className');$('#ProcessesList').dialog('close');" name="onClick"/>
+		              	<jsp:param value="provVis.comm.addProcess('http://www.policygrid.org/provenance-generic.owl##className');$('#ProcessesList').dialog('close');" name="onClick"/>
 		              	<jsp:param value="navigationType" name="ulId"/>	
 		              	<jsp:param value="text-align:left" name="ulStyle"/>
 		     </jsp:include>
 		     </div>
 			<div id="ArtifactsList" title="Artifacts List" style="display:none">
-			<ul><li><a style="float:left;" onclick="addArtifact('http://openprovenance.org/ontology#Artifact');$('#ArtifactsList').dialog('close');" href="#">Artifact</a><br></li></ul>
+			<ul><li><a style="float:left;" onclick="provVis.comm.addArtifact('http://openprovenance.org/ontology#Artifact');$('#ArtifactsList').dialog('close');" href="#">Artifact</a><br></li></ul>
 		     <jsp:include page="getResourcesTypes.jsp" >
 		              	<jsp:param value="http://openprovenance.org/ontology#Artifact" name="className"/>
-		              	<jsp:param value="addArtifact('http://www.policygrid.org/provenance-generic.owl##className');$('#ArtifactsList').dialog('close');" name="onClick"/>
+		              	<jsp:param value="provVis.comm.addArtifact('http://www.policygrid.org/provenance-generic.owl##className');$('#ArtifactsList').dialog('close');" name="onClick"/>
 		              	<jsp:param value="navigationType" name="ulId"/>		              	
 		     </jsp:include>
 		     </div>
 			 <div id="AgentsList" title="Agents List" style="display:none">
-			 <ul><li><a style="float:left;" onclick="addAgent('http://openprovenance.org/ontology#Agent');$('#AgentsList').dialog('close');" href="#">Agent</a><br></li></ul>
+			 <ul><li><a style="float:left;" onclick="provVis.comm.addAgent('http://openprovenance.org/ontology#Agent');$('#AgentsList').dialog('close');" href="#">Agent</a><br></li></ul>
 		     <jsp:include page="getResourcesTypes.jsp" >
 		              	<jsp:param value="http://openprovenance.org/ontology#Agent" name="className"/>
-		              	<jsp:param value="addAgent('http://www.policygrid.org/provenance-generic.owl##className');$('#AgentsList').dialog('close');" name="onClick"/>
+		              	<jsp:param value="provVis.comm.addAgent('http://www.policygrid.org/provenance-generic.owl##className');$('#AgentsList').dialog('close');" name="onClick"/>
 		              	<jsp:param value="navigationType" name="ulId"/>		              	
 		     </jsp:include>
 		     </div>
@@ -195,18 +162,17 @@ function loadAllProvenance(){
 			<h3 class="style3">Controls</h3>
 		</div>
 		<div class="widget-content text" style="float: left; width: 100%;">
-			<button id="loadAll"	onclick="loadAllProvenance();return false;">Load all provenance</button>
-			<button id="startSession"	onclick="startSession(function(data){var data = data.replace(/^\s+|\s+$/g, ''); sessionId = data;provenanceEditable = true;});">Start session</button>
-				<br><button id="endSession"	onclick="commit(sessionId, null);provenanceEditable = false;">Commit</button>
-				<button id="endSession"	onclick="rollback(sessionId, null);provenanceEditable = false;">Rollback</button>
+			<button id="startSession" style="font-weight:bold"	onclick="provVis.comm.startSession(provVis.edit.enableEditing);">Start session</button>
+				<br><button disabled="disabled" id="endSessionCommit"	onclick="provVis.comm.commit(provVis.comm.sessionId, function(data){var data = data.replace(/^\s+|\s+$/g, ''); if(data != 'ok') alert(data); else alert('Commit successful.');});provVis.graph.provenanceEditable = false;provVis.graph.checkEditing();">Commit</button>
+				<button disabled="disabled" id="endSessionRollback"	onclick="provVis.comm.rollback(provVis.comm.sessionId, function(data){var data = data.replace(/^\s+|\s+$/g, '');if(data != 'ok') alert(data); else alert('Rollback successful.');});provVis.graph.provenanceEditable = false;provVis.graph.checkEditing();window.location.reload();">Rollback</button>
 				<br><br>
 			<h4>New Process</h4>
 			<label for="-title">Title:</label> 
-			<input id="-title" type="text" name="-title" style="width:150px"></input>
+			<input id="-title" disabled="disabled" type="text" name="-title" style="width:150px"></input>
 			<!-- <button id="addAgent" onclick="$('#AgentsList').dialog({modal: true});">Add agent</button>
 				
 				<button id="addArtifact" onclick="$('#ArtifactsList').dialog({modal: true});">Add artifact</button> -->
-			<button id="addProcesses"	onclick="$('#ProcessesList').dialog({modal: true});">Add
+			<button id="addProcesses"	onclick="$('#ProcessesList').dialog({modal: true});" disabled="disabled">Add
 				process</button>
 			<br>
 			<br>
@@ -226,12 +192,10 @@ function loadAllProvenance(){
 						</div>
 					</form>
 				</div>
-			<a style="float:left" href="#" onclick="layout();return false;"><img src="/ourspaces/icons/001_39.png"></img></a><br>
-			
-			<a style="float:left" href="#" onclick="layoutSpring();resize();return false;"><img src="/ourspaces/icons/001_39.png"></img>Spring</a><br>
-			
-			<a style="float:left" href="#" onclick="hideSelected();return false;">Hide selected</a><br>
-			<a style="float:left" href="#" onclick="showAll();return false;">Show all</a>
+			<a style="float:left" title="Layout according to time" href="#" onclick="provVis.layout.layout();return false;"><img src="/ourspaces/icons/001_60.png" style="border:0;margin:5px;"></img></a>
+			<a style="float:left" title="Dynamic layout" href="#" onclick="provVis.layout.layoutSpring();provVis.layout.resize();return false;"><img src="/ourspaces/icons/001_61.png" style="border:0;margin:5px;"></img></a>
+			<a style="float:left" title="Hide/Show selected nodes" href="#" onclick="provVis.graph.switchVisibility();if($(this).children('img').attr('src')=='/ourspaces/icons/001_04.png') {$(this).children('img').attr('src','/ourspaces/icons/001_03.png');return false;} else {$(this).children('img').attr('src','/ourspaces/icons/001_04.png');return false;}"><img src="/ourspaces/icons/001_04.png" style="border:0;margin:5px;"></img></a>
+						
 		</div>
 	</div>
 	<div id="filtering" style="float:left;width:85%; background-color: white;padding: 4px;border: 1px solid black;/*left: 210px;position: relative;top: 290px;z-index: 999;*/" class="widget color-orange">
@@ -248,7 +212,7 @@ function loadAllProvenance(){
 	</div>
 	
 	<div id="center-wrapper" style="height:620px;float:left">
-	<div id="center-container">
+	<div class="center-container">
 		<div id="infovisEdit" class="infovis"></div>
 	
 	</div>

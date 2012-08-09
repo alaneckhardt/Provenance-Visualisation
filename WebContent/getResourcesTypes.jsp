@@ -20,8 +20,8 @@ ParameterHelper parHelp = new ParameterHelper(request, session);
 	if("true".equals(includeFirst)){
 		subClasses.add(className);
 	}
-	else{		
-		subClasses.addAll(RDFProvider.getSubclasses(className,true));	
+	else{
+		subClasses.addAll(ProvenanceService.getDataProvider().getSubclasses(className,true));	
 	}
 	
 %>
@@ -32,7 +32,7 @@ ParameterHelper parHelp = new ParameterHelper(request, session);
 
 	Vector<String> subClasses = new Vector<String>();
 	for(int i=0;i<labels.length;i++){
-		subClasses.addAll(RDFProvider.getSubclasses( className,true));
+		subClasses.addAll(ProvenanceService.getDataProvider().getSubclasses( className,true));
 	}
 	String classNameFull = className;
 	className=className.substring(className.indexOf('#')+1);
