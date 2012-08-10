@@ -16,8 +16,13 @@ It is a demo of the visualisation only - the editing of the provenance is not al
 
 # Dependencies
 ProvVis uses following javascript libraries sorted according to the importance:
+
 jQuery: http://jquery.com/
+
 jsPlumb: http://jsplumb.org/
+
 jQuery UI:http://jqueryui.com/
+
 jQuery Tree view: http://bassistance.de/jquery-plugins/jquery-plugin-treeview/
+
 seed random : http://davidbau.com/archives/2010/01/30/random_seeds_coded_hints_and_quintillions.html
