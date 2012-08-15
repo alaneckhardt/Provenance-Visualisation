@@ -72,7 +72,7 @@ function ProvVisCore(provVis) {
 				dInfo.html('<a href="/ourspaces/artifact_new.jsp?id='+escape(provVis.core.getLocalName(node.id))+'"><img style="border:none;margin:0px;" src="/ProvenanceService/css/images/info.png"></a>');
 			else
 				dInfo.removeClass("info");
-		},
+		}
 	};	
 	/**List of nodes*/
 	this.graph = [];
@@ -109,7 +109,7 @@ function ProvVisCore(provVis) {
 	};
 	this.initJsPlumb = function() {
 		this.provVis.jsPlumb.reset();	
-		this.provVis.jsPlumb.ready(function() {
+		//this.provVis.jsPlumb.ready(function() {
 			this.provVis.jsPlumb.Defaults.PaintStyle = {
 					lineWidth : 4,
 					strokeStyle : "#aaa"
@@ -122,7 +122,7 @@ function ProvVisCore(provVis) {
 				} ];
 			this.provVis.jsPlumb.Defaults.MaxConnections = 10;
 			this.provVis.jsPlumb.Defaults.Container = $("#" + this.provVis.jsPlumb.canvas);
-		});
+	//	});
 
 		// Panning support
 		//this.provVis.jsPlumb.draggable($(".agent"));
@@ -222,10 +222,15 @@ function ProvVisCore(provVis) {
 
 	this.loadProvenance = function(res, sessionId) {
 		//TODO - use prov service instead.
+		jQuery.ajaxSetup({
+			async : false
+		});
 		var query = serverVisual + "getProvenance.jsp?entity=" + escape(res);
 		if (typeof sessionId != 'undefined' && sessionId != null
 				&& sessionId != "")
 			query += "&sessionId=" + escape(sessionId);
+		var provVistmp = provVis;
+		provVis = this.provVis;
 		$.get(query, function(data) {
 			// Trim the data.
 			data = data.replace(/^\s+|\s+$/g, '');
@@ -262,8 +267,12 @@ function ProvVisCore(provVis) {
 				$(this).css('cursor', 'auto');
 			});
 
-			if(typeof initProvDisplay != 'undefined')
+			if(typeof initProvDisplay != 'undefine')
 				initProvDisplay();
+		});
+		provVis = provVistmp;
+		jQuery.ajaxSetup({
+			async : true
 		});
 	};
 

@@ -363,6 +363,7 @@ function ProvVisGraph(provVis) {
 		});
 		$(dTrigger).click(function() {
 			provVis.core.loadProvenance(node.id, provVis.comm.sessionId);
+			$(this).hide();
 			return false;
 		});
 		dTrigger.addClass("trigger");
