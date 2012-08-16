@@ -2,19 +2,7 @@
 <%@page import="javax.swing.event.ListSelectionEvent"%>
 <%@ page language="java" import="com.hp.hpl.jena.rdf.model.Model, java.util.Iterator,java.util.*,java.text.SimpleDateFormat,java.util.ArrayList,java.io.*,java.net.*,java.util.Vector,provenanceService.*" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-    
 <%
-	if (session.isNew() == true) {
-%>
-<jsp:forward page="../error.jsp" />
-<%
-	}
-	if (session.getAttribute("use") == null) {
-%>
-<jsp:forward page="../error.jsp" />
-<%
-	}
-
 ParameterHelper parHelp = new ParameterHelper(request, session);
 
 String resource = (String) parHelp.getParameter("resource","");
@@ -27,10 +15,10 @@ String editable = (String) parHelp.getParameter("editable","false");
 <link type="text/css"	href="/ProvenanceService/css/JsPlumb.css" rel="stylesheet" />
 <link type="text/css"	href="/ProvenanceService/css/ForceDirected.css" rel="stylesheet" />
 <link rel="stylesheet" type="text/css" href="./css/jquery.treeview.css" />
-<!-- <link type="text/css"	href="./css/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />-->
+ <link type="text/css"	href="./css/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />
 
-<!-- <script type="text/javascript"	src="/ProvenanceService/js/jquery-1.6.2.min.js"></script>
-<script type="text/javascript"	src="/ProvenanceService/js/jquery.qtip-1.0.0-rc3.min.js"></script>-->
+ <script type="text/javascript"	src="/ProvenanceService/js/jquery-1.6.2.min.js"></script>
+<script type="text/javascript"	src="/ProvenanceService/js/jquery.qtip-1.0.0-rc3.min.js"></script>
 <script type="text/javascript"	src="/ProvenanceService/js/jquery.jsPlumb-1.3.3-all.js"></script>
 
 <!-- Custom files -->
@@ -40,9 +28,9 @@ String editable = (String) parHelp.getParameter("editable","false");
 <script type="text/javascript"	src="/ProvenanceService/js/graphOperations.js"></script>
 <script type="text/javascript"	src="/ProvenanceService/js/customJsPlumb.js"></script>
 <script type="text/javascript"	src="/ProvenanceService/js/customJsPlumbSpring.js"></script>
--->
+
+<script type="text/javascript"	src="/ProvenanceService/js/init.js"></script>-->
 <script type="text/javascript"	src="/ProvenanceService/js/seedrandom.js"></script>
-<script type="text/javascript"	src="/ProvenanceService/js/init.js"></script>
 <script type="text/javascript"	src="/ProvenanceService/js/ProvVisGraph.js"></script>
 <script type="text/javascript"	src="/ProvenanceService/js/ProvVisComm.js"></script>
 <script type="text/javascript"	src="/ProvenanceService/js/ProvVisLayout.js"></script>
@@ -211,7 +199,7 @@ var resource = '<%=resource %>';
 	</div>	
 	</div>
 	
-	<div id="center-wrapper" style="height:620px;float:left">
+	<div id="center-wrapper" style="height:620px;font-size:12px;float:left">
 	<div class="center-container">
 		<div id="infovisEdit" class="infovis"></div>
 	

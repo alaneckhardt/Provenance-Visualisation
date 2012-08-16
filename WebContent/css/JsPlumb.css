@@ -49,7 +49,7 @@
 
 .center-container {
     width:595px;
-    background-color:white;
+    background-color: #111166;
     color:#ccc;
     z-index:1;
     position:relative;
@@ -72,9 +72,10 @@
 
 
 .infovis {
+    background-color:white;
     position:relative;
-    left:-1000px;
-    top:-1000px;
+    left:-650px;
+    top:-650px;
     width:2000px;    
     height:2000px;
     margin:auto;
