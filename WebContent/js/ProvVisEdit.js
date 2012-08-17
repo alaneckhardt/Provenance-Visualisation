@@ -13,10 +13,8 @@ function ProvVisEdit(provVis){
 		
 	this.initProvenance = function() { 
 	
-		loadProperties();
-		   loadSuperclassesProcess();
-		   loadSuperclassesArtifact();
-		   loadSuperclassesAgent();
+		   loadProperties();
+		   loadSuperclasses();
 		   // Now fill the subclasses.
 		   for(var x in superclasses){
 			   var xsuperclasses = superclasses[x];

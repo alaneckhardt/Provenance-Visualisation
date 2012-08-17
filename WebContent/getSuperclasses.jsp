@@ -5,7 +5,6 @@ ParameterHelper parHelp = new ParameterHelper(request, session);
 
 	String className = (String)parHelp.getParameter("className",  "http://openprovenance.org/ontology#Process");	
 %>
-function loadSuperclasses<%=Utility.getLocalName(className) %>(){
 	<%
 	ProvenanceServiceImpl impl = ProvenanceService.getSingleton();
 	//Get all subclasses
@@ -36,4 +35,3 @@ function loadSuperclasses<%=Utility.getLocalName(className) %>(){
 		}
 	}
 %>
-}

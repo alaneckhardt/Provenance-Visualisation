@@ -42,25 +42,34 @@ ParameterHelper parHelp = new ParameterHelper(request, session);
 		escId = resource.substring(resource.indexOf("#")+1);
 	else
 		escId = resource.substring(resource.indexOf("/")+1);
+	
+
+String artifacts = provenanceService.Properties.getString("artifact");
+String agents = provenanceService.Properties.getString("agent");
+
+String processes = provenanceService.Properties.getString("process");
 %>
 <script>
 
 	var superclasses = new Object();
 	var subclasses = new Object();
+
 	<jsp:include page="js/edges.jsp"	flush="false">
 		<jsp:param value="location" name="id"/>
 		<jsp:param value="false" name="controls"/>
 	</jsp:include>	
-	<jsp:include page="getSuperclasses.jsp"	flush="false">
-		<jsp:param value="http://openprovenance.org/ontology#Artifact" name="className"/>
-	</jsp:include>	
-	<jsp:include page="getSuperclasses.jsp"	flush="false">
-		<jsp:param value="http://openprovenance.org/ontology#Agent" name="className"/>
-	</jsp:include>	
-	<jsp:include page="getSuperclasses.jsp"	flush="false">
-		<jsp:param value="http://openprovenance.org/ontology#Process" name="className"/>
-	</jsp:include>	
 
+	function loadSuperclasses(){
+	<jsp:include page="getSuperclasses.jsp"	flush="false">
+		<jsp:param value="<%=artifacts%>" name="className"/>
+	</jsp:include>	
+	<jsp:include page="getSuperclasses.jsp"	flush="false">
+		<jsp:param value="<%=agents %>" name="className"/>
+	</jsp:include>	
+	<jsp:include page="getSuperclasses.jsp"	flush="false">
+		<jsp:param value="<%=processes %>" name="className"/>
+	</jsp:include>	
+	}
 
 	
 	

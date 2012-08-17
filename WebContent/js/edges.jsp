@@ -16,7 +16,7 @@
 		// TODO - fix the ontology so that it contains the OPM directly 
 			int count = 0;	
 			ProvenanceServiceImpl impl = ProvenanceService.getSingleton();
-			Vector<String> subclasses = impl.getDataProvider().getSubclasses("http://openprovenance.org/ontology#Edge");
+			Vector<String> subclasses = impl.getDataProvider().getSubclasses(provenanceService.Properties.getString("edge"));
 			for(int i = 0;i<subclasses.size();i++){
 				String c = subclasses.get(i);
 				//Adding subclasses of this edge.

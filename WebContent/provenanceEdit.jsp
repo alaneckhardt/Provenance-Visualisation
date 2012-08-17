@@ -7,6 +7,11 @@ ParameterHelper parHelp = new ParameterHelper(request, session);
 
 String resource = (String) parHelp.getParameter("resource","");
 String editable = (String) parHelp.getParameter("editable","false");
+
+
+String artifacts = provenanceService.Properties.getString("artifact");
+String agents = provenanceService.Properties.getString("agent");
+String processes = provenanceService.Properties.getString("process");
 %>
 
 <link type="text/css" rel="stylesheet" media="all" href="/ourspaces/table.css" />
@@ -63,34 +68,27 @@ var subclasses = new Object();
 provVis.core.graph = [];
 var resource = '<%=resource %>';
 
-<jsp:include page="js/edges.jsp"	flush="false">
+
+<jsp:include page="js/edges.jsp">
 	<jsp:param value="location" name="id"/>
 	<jsp:param value="false" name="controls"/>
 </jsp:include>	
-<jsp:include page="getSuperclasses.jsp"	flush="false">
-	<jsp:param value="http://openprovenance.org/ontology#Artifact" name="className"/>
-</jsp:include>	
-<jsp:include page="getSuperclasses.jsp"	flush="false">
-	<jsp:param value="http://openprovenance.org/ontology#Agent" name="className"/>
-</jsp:include>	
-<jsp:include page="getSuperclasses.jsp"	flush="false">
-	<jsp:param value="http://openprovenance.org/ontology#Process" name="className"/>
-</jsp:include>	
 
-
-		
-		//Init the graph
-		/*$(".center-container").droppable({
-			drop: function( event, ui ) {
-				var title = ui.draggable.text();
-				title = title.replace(/^\s+|\s+$/g, '');
-				addExistingResource(ui.draggable.attr('id'), ui.draggable.attr('data-class'), title);
-			}
-		});*/
-			</script>
+function loadSuperclasses(){
+<jsp:include page="getSuperclasses.jsp">
+	<jsp:param value="<%=artifacts%>" name="className"/>
+</jsp:include>	
+<jsp:include page="getSuperclasses.jsp">
+	<jsp:param value="<%=agents %>" name="className"/>
+</jsp:include>	
+<jsp:include page="getSuperclasses.jsp">
+	<jsp:param value="<%=processes %>" name="className"/>
+</jsp:include>	
+}
+</script>
 			<div id="ProcessesDisableList" title="Processes List" style="display:none">
 				<jsp:include page="getResourcesTypes.jsp" >
-		              	<jsp:param value="http://openprovenance.org/ontology#Process" name="className"/>
+		              	<jsp:param value="<%=processes %>" name="className"/>
 		              	<jsp:param value="provVis.edit.uncheck(this)" name="onClick"/>
 		              	<jsp:param value="navigationType" name="ulId"/>	
 		              	<jsp:param value="text-align:left" name="ulStyle"/>
@@ -100,7 +98,7 @@ var resource = '<%=resource %>';
 		  </div>
 			<div id="ArtifactsDisableList" title="Artifacts List" style="display:none">
 				<jsp:include page="getResourcesTypes.jsp" >
-		              	<jsp:param value="http://openprovenance.org/ontology#Artifact" name="className"/>
+		              	<jsp:param value="<%=artifacts%>" name="className"/>
 		              	<jsp:param value="provVis.edit.uncheck(this)" name="onClick"/>
 		              	<jsp:param value="navigationType" name="ulId"/>	
 		              	<jsp:param value="text-align:left" name="ulStyle"/>
@@ -109,7 +107,7 @@ var resource = '<%=resource %>';
 		  </div>
 			<div id="AgentsDisableList" title="Agents List" style="display:none">
 				<jsp:include page="getResourcesTypes.jsp" >
-		              	<jsp:param value="http://openprovenance.org/ontology#Agent" name="className"/>
+		              	<jsp:param value="<%=agents %>" name="className"/>
 		              	<jsp:param value="provVis.edit.uncheck(this)" name="onClick"/>
 		              	<jsp:param value="navigationType" name="ulId"/>	
 		              	<jsp:param value="text-align:left" name="ulStyle"/>
@@ -118,26 +116,26 @@ var resource = '<%=resource %>';
 		  </div>
 			<div id="ProcessesList" title="Processes List" style="display:none">
 			<ul>
-			  <li><a style="float:left;" onclick="provVis.comm.addProcess('http://openprovenance.org/ontology#Process');$('#ProcessesList').dialog('close');" href="#">Process</a><br></li></ul>
+			  <li><a style="float:left;" onclick="provVis.comm.addProcess('<%=processes %>');$('#ProcessesList').dialog('close');" href="#">Process</a><br></li></ul>
 			  <jsp:include page="getResourcesTypes.jsp" >
-		              	<jsp:param value="http://openprovenance.org/ontology#Process" name="className"/>
+		              	<jsp:param value="<%=processes %>" name="className"/>
 		              	<jsp:param value="provVis.comm.addProcess('http://www.policygrid.org/provenance-generic.owl##className');$('#ProcessesList').dialog('close');" name="onClick"/>
 		              	<jsp:param value="navigationType" name="ulId"/>	
 		              	<jsp:param value="text-align:left" name="ulStyle"/>
 		     </jsp:include>
 		     </div>
 			<div id="ArtifactsList" title="Artifacts List" style="display:none">
-			<ul><li><a style="float:left;" onclick="provVis.comm.addArtifact('http://openprovenance.org/ontology#Artifact');$('#ArtifactsList').dialog('close');" href="#">Artifact</a><br></li></ul>
+			<ul><li><a style="float:left;" onclick="provVis.comm.addArtifact('<%=artifacts%>');$('#ArtifactsList').dialog('close');" href="#">Artifact</a><br></li></ul>
 		     <jsp:include page="getResourcesTypes.jsp" >
-		              	<jsp:param value="http://openprovenance.org/ontology#Artifact" name="className"/>
+		              	<jsp:param value="<%=artifacts%>" name="className"/>
 		              	<jsp:param value="provVis.comm.addArtifact('http://www.policygrid.org/provenance-generic.owl##className');$('#ArtifactsList').dialog('close');" name="onClick"/>
 		              	<jsp:param value="navigationType" name="ulId"/>		              	
 		     </jsp:include>
 		     </div>
 			 <div id="AgentsList" title="Agents List" style="display:none">
-			 <ul><li><a style="float:left;" onclick="provVis.comm.addAgent('http://openprovenance.org/ontology#Agent');$('#AgentsList').dialog('close');" href="#">Agent</a><br></li></ul>
+			 <ul><li><a style="float:left;" onclick="provVis.comm.addAgent('<%=agents %>');$('#AgentsList').dialog('close');" href="#">Agent</a><br></li></ul>
 		     <jsp:include page="getResourcesTypes.jsp" >
-		              	<jsp:param value="http://openprovenance.org/ontology#Agent" name="className"/>
+		              	<jsp:param value="<%=agents %>" name="className"/>
 		              	<jsp:param value="provVis.comm.addAgent('http://www.policygrid.org/provenance-generic.owl##className');$('#AgentsList').dialog('close');" name="onClick"/>
 		              	<jsp:param value="navigationType" name="ulId"/>		              	
 		     </jsp:include>
@@ -171,9 +169,9 @@ var resource = '<%=resource %>';
 						<div>
 							Search for existing resources<br> 
 							<select name="classSelect" id="classSelect" style="width: 100px; float: left;">
-								<option value="http://openprovenance.org/ontology#Artifact">Artifact</option>
-								<option value="http://xmlns.com/foaf/0.1/Person">Person</option>
-								<option value="http://openprovenance.org/ontology#Process">Process</option>
+								<option value="<%=artifacts%>">Artifact</option>
+								<option value="<%=agents %>">Person</option>
+								<option value="<%=processes %>">Process</option>
 							</select> 
 							<input type="text" name="tag"	style="width: 130px; border: 1px solid #666666; background-color: #e6e5e9;"	id="provenanceInputString" />
 	
