@@ -7,7 +7,7 @@ ParameterHelper parHelp = new ParameterHelper(request, session);
 
 	String sessionId = (String)parHelp.getParameter("sessionId",  "");	
 	String entityId = (String)parHelp.getParameter("entity",  "");	
-	Graph g = ProvenanceService.getProvenance(entityId, sessionId);	
+	Graph g = ProvenanceService.getSingleton().getProvenance(entityId, sessionId);	
 	/*for(int i=0;i<g.size();i++){
 		Node n = g.get(i);
 		if(!"Agent".equals(n.getBasicType()))

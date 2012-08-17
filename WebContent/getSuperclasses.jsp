@@ -7,14 +7,15 @@ ParameterHelper parHelp = new ParameterHelper(request, session);
 %>
 function loadSuperclasses<%=Utility.getLocalName(className) %>(){
 	<%
+	ProvenanceServiceImpl impl = ProvenanceService.getSingleton();
 	//Get all subclasses
-	Vector<String> subClasses = ProvenanceService.getDataProvider().getSubclasses( className);
+	Vector<String> subClasses = impl.getDataProvider().getSubclasses( className);
 	//Writing all superclasses of all subclasses of given class (e.g. of JournalPaper, when given Artifact)
 	for(int i=0;i<subClasses.size();i++){
 		String subClass = subClasses.get(i);
 
 		//Get all superclasses of the subclass (Paper, Artifact, Node,...)
-		Vector<String> superClasses = ProvenanceService.getDataProvider().getSuperclasses( subClass);
+		Vector<String> superClasses = impl.getDataProvider().getSuperclasses( subClass);
 %>
 		superclasses['<%=subClass%>']= [];
 		<%
@@ -26,7 +27,7 @@ function loadSuperclasses<%=Utility.getLocalName(className) %>(){
 					%>superclasses['<%=subClass%>'].push('<%=superClass%>');<%
 	}
 		
-		Vector<String> subClassesTemp = ProvenanceService.getDataProvider().getSubclasses( subClass);
+		Vector<String> subClassesTemp = impl.getDataProvider().getSubclasses( subClass);
 		for(int j=0;j<subClassesTemp.size();j++){
 			String s = subClassesTemp.get(j);
 			if(s.equals(className) || superClasses.contains(s) || subClasses.contains(s))

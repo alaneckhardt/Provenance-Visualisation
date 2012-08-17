@@ -15,12 +15,13 @@
 		//TODO - load edges from database 
 		// TODO - fix the ontology so that it contains the OPM directly 
 			int count = 0;	
-			Vector<String> subclasses = ProvenanceService.getDataProvider().getSubclasses("http://openprovenance.org/ontology#Edge");
+			ProvenanceServiceImpl impl = ProvenanceService.getSingleton();
+			Vector<String> subclasses = impl.getDataProvider().getSubclasses("http://openprovenance.org/ontology#Edge");
 			for(int i = 0;i<subclasses.size();i++){
 				String c = subclasses.get(i);
 				//Adding subclasses of this edge.
-				subclasses.addAll(ProvenanceService.getDataProvider().getSubclasses( c));
-				Iterator<Restriction> it = ProvenanceService.getDataProvider().getRestrictionsOnClass(c);
+				subclasses.addAll(impl.getDataProvider().getSubclasses( c));
+				Iterator<Restriction> it = impl.getDataProvider().getRestrictionsOnClass(c);
 				
 				String fromAllValuesFrom = "";
 				String toAllValuesFrom = "";

@@ -1,7 +1,7 @@
 <%@ page language="java" import="provenanceService.*,com.hp.hpl.jena.rdf.model.*, com.hp.hpl.jena.ontology.*,java.util.Iterator,java.util.*,java.net.*,java.text.SimpleDateFormat,java.util.ArrayList,java.io.*,java.net.*,java.util.Vector" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
 <% 
-	Graph g = RDFProvider.getAllProvenance();
+	Graph g = ProvenanceService.getSingleton().getDataProvider().getAllProvenance();
 	Graph g2 = new Graph();
 	for(int i=0;i<g.size();i++){
 		Node n = g.get(i);

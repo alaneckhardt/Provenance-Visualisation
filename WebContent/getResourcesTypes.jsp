@@ -17,11 +17,12 @@ ParameterHelper parHelp = new ParameterHelper(request, session);
 	
 	Vector<String> subClasses = new Vector<String>();
 
+	ProvenanceServiceImpl impl = ProvenanceService.getSingleton();
 	if("true".equals(includeFirst)){
 		subClasses.add(className);
 	}
 	else{
-		subClasses.addAll(ProvenanceService.getDataProvider().getSubclasses(className,true));	
+		subClasses.addAll(impl.getDataProvider().getSubclasses(className,true));	
 	}
 	
 %>
@@ -30,9 +31,10 @@ ParameterHelper parHelp = new ParameterHelper(request, session);
  public String loadTree(String content, String className, 
 		 String liClass, String liStyle, String onClick, String ulClass, String ulStyle, String innerUlStyle, String[] labels){
 
+	ProvenanceServiceImpl impl = ProvenanceService.getSingleton();
 	Vector<String> subClasses = new Vector<String>();
 	for(int i=0;i<labels.length;i++){
-		subClasses.addAll(ProvenanceService.getDataProvider().getSubclasses( className,true));
+		subClasses.addAll(impl.getDataProvider().getSubclasses( className,true));
 	}
 	String classNameFull = className;
 	className=className.substring(className.indexOf('#')+1);

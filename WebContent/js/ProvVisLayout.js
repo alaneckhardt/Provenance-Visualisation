@@ -1,3 +1,8 @@
+/**
+ * Class for layouting the graph.
+ * @param provVis
+ * @returns
+ */
 function ProvVisLayout(provVis) {
 	this.provVis = provVis;
 	//These settings work well
