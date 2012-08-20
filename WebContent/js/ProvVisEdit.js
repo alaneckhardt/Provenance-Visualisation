@@ -40,6 +40,7 @@ function ProvVisEdit(provVis){
 			$("#ProcessesDisableList").treeview({collapsed : true});
 			$("#ArtifactsDisableList").treeview({collapsed : true});
 			$("#AgentsDisableList").treeview({collapsed : true});
+			$("#EdgesDisableList").treeview({collapsed : false});
 			
 			$(".center-container").resizable({
 				maxWidth: 945,
@@ -108,39 +109,38 @@ function ProvVisEdit(provVis){
 	     });        
 	
 			// Add possibility to disable edges
-			for(x in edges){
-				var edge = edges[x];
-				var div = $("<div>");
+	        $("#EdgesDisableList br").remove();
+	        $("#EdgesDisableList li a").each(function(){
+				var span = $("<span>");
 				var el = $("<input>");
 				el.attr("type","checkbox");
 				el.attr("data-edge",x);
 				el.attr("checked","checked");
-				div.append(el);
-				div.append(edge.edge);
+				span.append(el);
 				el.click(function() {
-						if($(this).attr("checked")=="checked"){
-							var edge = edges[$(this).attr("data-edge")];
-							// Show canvas
-							$('[data-type="'+edge.idEdge+'"]').show();
-							// Show div with label
-							$('.'+edge.idEdge.substring(edge.idEdge.indexOf('#')+1)).show();
-							$('#infovis :contains("'+edge.edge+'")').show();
-							
-						}
-						else{
-							var edge = edges[$(this).attr("data-edge")];
-							// Hiding canvases
-							$('[data-type="'+edge.idEdge+'"]').hide();
-							// Hiding labels of edges
-							$('.'+edge.idEdge.substring(edge.idEdge.indexOf('#')+1)).hide();
-							$('#infovis :contains("'+edge.edge+'")').hide();						
-						}
-				});
-				div.appendTo("#edgesDisable");
-			}
+					if($(this).attr("checked")=="checked"){
+						var edge = $(this).parent().parent().parent().attr("data-class");
+						// Show canvas
+						$('[data-type="'+edge+'"]').show();
+						// Show div with label
+						$('.'+edge.substring(edge.indexOf('#')+1)).show();
+						$('#infovis :contains("'+ProvVisCore.getLocalName(edge)+'")').show();
+						
+					}
+					else{
+						var edge = $(this).parent().parent().parent().attr("data-class");
+						// Hiding canvases
+						$('[data-type="'+edge+'"]').hide();
+						// Hiding labels of edges
+						$('.'+edge.substring(edge.indexOf('#')+1)).hide();
+						$('#infovis :contains("'+ProvVisCore.getLocalName(edge)+'")').hide();						
+					}
+			});
+				
+	        	$(this).append(span);
+	        });
 			
-			// Add checkbox to ProcessDisable list
-	
+			// Add checkbox to ProcessDisable list	
 			$("#ProcessesDisableList li,#ArtifactsDisableList li,#AgentsDisableList li ").each(function(index) {
 				// Only one checkbox.
 				if($(this).children("a").siblings("input").html() == null){
@@ -149,15 +149,7 @@ function ProvVisEdit(provVis){
 					check.attr("checked","checked");
 					check.click(function(){
 						provVis.edit.uncheck(this);
-					});
-					// No need to have click event - all is done in the parent
-					// "a href". See hideType reference.
-				  /*
-					 * check.click(this.function() { var selector =
-					 * '[data-fulltype="'+$(this.parentNode.parentNode).attr("data-class")+'"]';
-					 * var checked = $(this).attr("checked"); provVis.graph.hideType(selector,
-					 * checked); });
-					 */
+					});					
 				  // Append the checkbox just after the link.
 					$(this).children("a").after(check);
 				}

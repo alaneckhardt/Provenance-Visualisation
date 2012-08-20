@@ -12,6 +12,7 @@ String editable = (String) parHelp.getParameter("editable","false");
 String artifacts = provenanceService.Properties.getString("artifact");
 String agents = provenanceService.Properties.getString("agent");
 String processes = provenanceService.Properties.getString("process");
+String edges = provenanceService.Properties.getString("edge");
 %>
 
 <link type="text/css" rel="stylesheet" media="all" href="/ourspaces/table.css" />
@@ -184,11 +185,21 @@ function loadSuperclasses(){
 						
 		</div>
 	</div>
-	<div id="filtering" style="float:left;width:85%; background-color: white;padding: 4px;border: 1px solid black;/*left: 210px;position: relative;top: 290px;z-index: 999;*/" class="widget color-orange">
+	<div id="filtering" style="float:left;background-color: white;padding: 4px;border: 1px solid black;/*left: 210px;position: relative;top: 290px;z-index: 999;*/" class="widget color-orange">
 		<div class="widget-head">
 			<h3 class="style3">Filter by type</h3>
 		</div>
-		<div class="widget-content text" style="float: left;width: 100%;">
+		<div class="widget-content text" style="float: left;width: 100%;">					
+		  <div class="hideList" id="EdgesDisableList" title="Edges List" style="display:block;overflow-x: scroll;padding-left:0px;">
+				<jsp:include page="getResourcesTypes.jsp" >
+		              	<jsp:param value="<%=edges %>" name="className"/>
+		              	<jsp:param value="provVis.edit.uncheck(this)" name="onClick"/>
+		              	<jsp:param value="navigationType" name="ulId"/>	
+		              	<jsp:param value="text-align:left;padding-left:0px;" name="ulStyle"/>
+		              	<jsp:param value="true" name="includeFirst"/>
+		     </jsp:include>
+		  </div>
+		
 			<div id="edgesDisable"></div>
 			<button id="hideProcesses" onclick="$('#ProcessesDisableList').dialog({modal: true});">Hide	processes</button><br>
 			<button id="hideProcesses" onclick="$('#ArtifactsDisableList').dialog({modal: true});">Hide	artifacts</button><br>

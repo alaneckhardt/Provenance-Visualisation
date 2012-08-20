@@ -359,3 +359,21 @@ canvas{
    -webkit-box-shadow: 2px 2px 19px #033;
    -moz-box-shadow: 2px 2px 19px #033;
 }
+
+.hideList li a {
+	display: block;
+    overflow: hidden;
+    width: 150%;
+}
+.hideList li  {
+    display: block;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+
+.hideList ul  {    
+	overflow: hidden;
+    padding-left: 15px;
+    width: 120%;
+}
