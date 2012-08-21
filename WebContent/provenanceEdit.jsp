@@ -61,6 +61,8 @@ $(document).ready(function(){
 	provVis.jsPlumb.width = $(".center-container").width()-115, 
 	provVis.jsPlumb.height = $(".center-container").height()-40;
 	//$("#filtering").draggable();
+	//Hiding info button - no use going from editing to detail, losing work done.
+	$(".shape .info").hide();
 });
 provVis.jsPlumb.canvas = "infovisEdit";
 provVis.graph.provenanceEditable = false;
