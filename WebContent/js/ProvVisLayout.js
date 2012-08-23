@@ -231,7 +231,7 @@ function ProvVisLayout(provVis) {
           if(t == null || node.basicType == "Agent"){
           	countNulls++;
           }
-          if(lastT==t){
+          else if(lastT==t){
           	//Artifacts on the top, processes on the bottom
           	if(node.basicType == "Artifact" && copy[i-1].basicType == "Process"){
           		copy[i-1].layoutPosY = 1+counter;
@@ -269,7 +269,7 @@ function ProvVisLayout(provVis) {
   	        }
   	        avgX /= divider;
           	node.layoutPosX = avgX;
-          	node.layoutPosY = maxY*1.5;
+          	node.layoutPosY = maxY+1;
           }
       }
 
