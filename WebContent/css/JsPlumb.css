@@ -222,22 +222,6 @@ canvas{
     text-align: left;
 }
 
-.trigger{
-    background-image: url("/ProvenanceService/css/images/trigger.png");
-    background-size: 100%;
-	 /* background-color: lightgrey;
-    border-radius: 3px;
-    font-size: 1.2em;
-    font-weight: normal;
-    */
-    position: absolute;
-    top:-3px;
-    right:-3px;
-    height: 12px;
-    padding: 0 0 2px 2px;
-    width: 12px;
-    z-index:5;
-}
 .info{
     /*background-image: url("/ProvenanceService/css/images/info.png");*/
     background-size: 100%;
@@ -319,6 +303,36 @@ canvas{
     z-index: 5;
 }
 
+.trigger{
+    background-image: url("/ProvenanceService/css/images/trigger.png");
+    background-size: 100%;
+	 /* background-color: lightgrey;
+    border-radius: 3px;
+    font-size: 1.2em;
+    font-weight: normal;
+    */
+    position: absolute;
+    top:-3px;
+    right:-3px;
+    height: 12px;
+    padding: 0 0 2px 2px;
+    width: 12px;
+    z-index:5;
+}
+
+
+.shape .trigger {
+    display: none;
+}
+.Agent .trigger {
+    display: none;
+}
+.Process .trigger {
+    display: block;
+}
+.Artifact .trigger {
+    display: block;
+}
 .focused.Artifact {
 	background-color: #DF9B01;
 }
