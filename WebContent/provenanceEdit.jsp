@@ -176,7 +176,7 @@ function loadSuperclasses(){
 								<option value="<%=agents %>">Person</option>
 								<option value="<%=processes %>">Process</option>
 							</select> 
-							<input type="text" name="tag"	style="width: 130px; border: 1px solid #666666; background-color: #e6e5e9;"	id="provenanceInputString" />
+							<input type="text" class="resourceInput" name="tag"	style="width: 130px; border: 1px solid #666666; background-color: #e6e5e9;"	id="provenanceInputString" />
 	
 						</div>
 					</form>
