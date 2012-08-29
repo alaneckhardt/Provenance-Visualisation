@@ -126,7 +126,7 @@ function ProvVisGraph(provVis) {
 			"escId" : escId,
 			"adjacencies" : []
 		};
-		this.addNode(node);
+		this.provVis.core.addNode(node);
 	};
 
 	this.displayRelationship2 = function(adj) {
