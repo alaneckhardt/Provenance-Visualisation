@@ -4,6 +4,9 @@
 function ProvVisComm(provVis) {
 	this.provVis = provVis;
 	this.sessionId;
+	this.process_counter = 0;
+	this.agent_counter = 0;
+	this.artifacts_counter = 0;
 	/**
 	 * 
 	 * @param data URI of the process
@@ -12,13 +15,13 @@ function ProvVisComm(provVis) {
 	 */
 	this.displayProcess = function(data, title, className) {
 		if (title == null)
-			title = "Process " + process_counter;
+			title = "Process " + this.process_counter;
 		//Trim the data.
 		data = data.replace(/^\s+|\s+$/g, '');
 		if (data.lastIndexOf('Error', 0) === 0)
 			return;
 		provVis.graph.displayEntity(data, title, "Process", className);
-		process_counter++;
+		this.process_counter++;
 	};
 
 	/**
@@ -29,13 +32,13 @@ function ProvVisComm(provVis) {
 	 */
 	this.displayAgent = function(data, title, className) {
 		if (title == null)
-			title = "Agent " + agent_counter;
+			title = "Agent " + this.agent_counter;
 		//Trim the data.
 		data = data.replace(/^\s+|\s+$/g, '');
 		if (data.lastIndexOf('Error', 0) === 0)
 			return;
 		provVis.graph.displayEntity(data, title, "Agent", className);
-		agent_counter++;
+		this.agent_counter++;
 	};
 
 	/**
@@ -45,13 +48,13 @@ function ProvVisComm(provVis) {
 	 */
 	this.displayArtifact = function(data, title, className) {
 		if (title == null)
-			title = "Artifact " + artifacts_counter;
+			title = "Artifact " + this.artifacts_counter;
 		//Trim the data.
 		data = data.replace(/^\s+|\s+$/g, '');
 		if (data.lastIndexOf('Error', 0) === 0)
 			return;
 		provVis.graph.displayEntity(data, title, "Artifact", className);
-		artifacts_counter++;
+		this.artifacts_counter++;
 	};
 
 	/**
