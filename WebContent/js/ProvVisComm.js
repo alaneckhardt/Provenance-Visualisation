@@ -99,25 +99,52 @@ function ProvVisComm(provVis) {
 		$.get(query, event);
 	};
 
+	this.addTitle = function(uri, title){
+		if(typeof title != 'undefined' && title != null){
+			query = server + 'ProvenanceService?action=addTitle&session='+ escape(this.sessionId) + '&resource=' + escape(uri) + '&title='+ escape(title);
+			$.get(query, function(data) {
+			});
+		}		
+	};
+	/**
+	 * 
+	 * @param className Type of the node
+	 */
+	this.addNode = function(className, title) {
+		var query = server + 'ProvenanceService?action=addNode&session='+ escape(this.sessionId) + "&type=" + escape(className);
+		var uri = "";
+		jQuery.ajaxSetup({async : false});
+		$.get(query, function(data) {
+			//Trim the data.
+			data = data.replace(/^\s+|\s+$/g, '');
+			provVis.comm.displayProcess(data, title, className);
+			uri = data;
+		});
+		addTitle(uri, title);
+		jQuery.ajaxSetup({async : true});
+	};
+	
 	/**
 	 * 
 	 * @param className Type of the process
 	 */
 	this.addProcess = function(className) {
 		var title = $("#-title").val();
-		var query = server + 'ProvenanceService?action=addProcess&session='+ escape(this.sessionId);
+		//If type is specified, add node instead.
 		if (className != null && className != "") {
-			query += "&type=" + escape(className);
+			return this.addNode(className, title);			
 		}
-
+		var query = server + 'ProvenanceService?action=addProcess&session='+ escape(this.sessionId);
+		var uri = "";
+		jQuery.ajaxSetup({async : false});
 		$.get(query, function(data) {
 			//Trim the data.
 			data = data.replace(/^\s+|\s+$/g, '');
 			provVis.comm.displayProcess(data, title, className);
-			query = server + 'ProvenanceService?action=addTitle&session='+ escape(this.sessionId) + '&object=' + escape(data) + '&title='+ escape(title);
-			$.get(query, function(data) {
-			});
+			uri = data;
 		});
+		addTitle(uri, title);
+		jQuery.ajaxSetup({async : true});
 	};
 
 	/**
@@ -130,14 +157,16 @@ function ProvVisComm(provVis) {
 		if (className != null && className != "") {
 			query += "&type=" + escape(className);
 		}
+		var uri = "";
+		jQuery.ajaxSetup({async : false});
 		$.get(query, function(data) {
 			//Trim the data.
 			data = data.replace(/^\s+|\s+$/g, '');
 			provVis.comm.displayAgent(data, title, className);
-			query = server + 'ProvenanceService?action=addTitle&session='+ escape(this.sessionId) + '&object=' + escape(data) + '&title='+ escape(title);
-			$.get(query, function(data) {
-			});
+			uri = data;
 		});
+		addTitle(uri, title);
+		jQuery.ajaxSetup({async : true});
 	};
 
 	/**
@@ -147,6 +176,8 @@ function ProvVisComm(provVis) {
 	this.addArtifact = function(className) {
 		var title = $("#-title").val();
 		var query = server + 'ProvenanceService?action=addArtifact&session='+ escape(this.sessionId);
+		var uri = "";
+		jQuery.ajaxSetup({async : false});
 		if (className != null && className != "") {
 			query += "&type=" + escape(className);
 		}
@@ -154,11 +185,10 @@ function ProvVisComm(provVis) {
 			//Trim the data.
 			data = data.replace(/^\s+|\s+$/g, '');
 			provVis.comm.displayArtifact(data, title, className);
-			query = server + 'ProvenanceService?action=addTitle&session='+ escape(this.sessionId) + '&object=' + escape(data) + '&title='
-					+ escape(title);
-			$.get(query, function(data) {
-			});
+			uri = data;
 		});
+		addTitle(uri, title);
+		jQuery.ajaxSetup({async : true});
 	};
 
 	/**
