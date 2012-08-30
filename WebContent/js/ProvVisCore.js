@@ -1,6 +1,6 @@
 /**
  * This is a class representing a node.
- * @author Alan Eckhardt
+ * @author Alan Eckhardt a.e@centrum.cz
  */
 function Node() {
 		/**Uri of the edge*/
@@ -19,7 +19,7 @@ function Node() {
 }
 /**
  * This is a class representing an edge.
- * @author Alan Eckhardt
+ * @author Alan Eckhardt a.e@centrum.cz
  */
 function Edge() {
     	/**URI of the edge*/
@@ -35,7 +35,7 @@ function Edge() {
 }
 /**
  * 
- * @author Alan Eckhardt
+ * @author Alan Eckhardt a.e@centrum.cz
  */
 function EdgeType() {
 	/**Uri of the edge*/
@@ -51,7 +51,7 @@ var server = '/ProvenanceService/';
 var serverVisual = '/ProvenanceService/';
 /**
  * 
- * @author Alan Eckhardt
+ * @author Alan Eckhardt a.e@centrum.cz
  * @param provVis
  * @returns
  */

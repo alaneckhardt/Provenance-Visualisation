@@ -2,7 +2,7 @@
  * Class for layouting the graph.
  * The Force layout based on D3 framework: http://d3js.org/
  * @param provVis
- * @author Alan Eckhardt
+ * @author Alan Eckhardt a.e@centrum.cz
  * @returns
  */
 function ProvVisLayout(provVis) {

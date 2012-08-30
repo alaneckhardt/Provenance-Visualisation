@@ -1,6 +1,6 @@
 /**
  * 
- * @author Alan Eckhardt
+ * @author Alan Eckhardt a.e@centrum.cz
  * @returns {ProvVisGraph}
  */
 function ProvVisGraph(provVis) {

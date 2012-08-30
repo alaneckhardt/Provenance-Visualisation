@@ -1,6 +1,6 @@
 /**
  * 
- * @author Alan Eckhardt
+ * @author Alan Eckhardt a.e@centrum.cz
  * @param provVis
  * @returns
  */function ProvVisEdit(provVis){
