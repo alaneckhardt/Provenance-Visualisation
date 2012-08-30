@@ -223,7 +223,7 @@ function ProvVisCore(provVis) {
 
 		// Trim the data.
 		data = data.replace(/^\s+|\s+$/g, '');
-		var graph = $.parseJSON('(' + data + ')');
+		var graph = eval('(' + data + ')');
 		//Merging the nodes
 		for ( var x in graph) {
 			var node = graph[x];
