@@ -1,5 +1,6 @@
 /**
  * Class for layouting the graph.
+ * The Force layout based on D3 framework: http://d3js.org/
  * @param provVis
  * @author Alan Eckhardt
  * @returns
