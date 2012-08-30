@@ -14,7 +14,7 @@ String agents = provenanceService.Properties.getString("agent");
 String processes = provenanceService.Properties.getString("process");
 String edges = provenanceService.Properties.getString("edge");
 %>
-
+<!--  * @author Alan Eckhardt a.e@centrum.cz -->
 <link type="text/css" rel="stylesheet" media="all" href="/ourspaces/table.css" />
 <link href="/ourspaces/jqueryFileTree.css" rel="stylesheet" type="text/css" media="screen" />
 <!-- CSS Files -->

@@ -1,7 +1,7 @@
 <%@ page language="java"
 	import="provenanceService.*,com.hp.hpl.jena.rdf.model.*,com.hp.hpl.jena.ontology.*,java.util.Iterator,java.util.*,java.net.*,java.text.SimpleDateFormat,java.util.ArrayList,java.io.*,java.net.*,java.util.Vector"
 	contentType="text/html; charset=ISO-8859-1" pageEncoding="ISO-8859-1"%>
-
+<!--  * @author Alan Eckhardt a.e@centrum.cz -->
 <!-- CSS Files -->
 <link type="text/css"	href="/ProvenanceService/css/JsPlumb.css" rel="stylesheet" />
 <link type="text/css"	href="/ProvenanceService/css/ForceDirected.css" rel="stylesheet" />
