@@ -87,9 +87,7 @@ function ProvVisEdit(provVis){
 				$('.ui-autocomplete.ui-menu ').css("z-index","2000");
 			},
 	        // define select handler
-	        select: function(e, ui) {          
-				// Empty the edit box
-				// TODO check what this is doing exactly $('#'+name).val("");
+	        select: function(e, ui) {
 			      // Add the resource to the graph
 			      	var query = "/ProvenanceService/ProvenanceService?action=getNode&resource="+escape(ui.item.id);
 			      	$.get(query, function(data) {

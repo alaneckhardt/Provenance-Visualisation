@@ -94,9 +94,7 @@ function ProvVisGraph(provVis) {
 				provVis.graph.shrinkDiv(this, multiple, centerX, centerY);
 			});
 
-			// Repaint correct position of the draggable endpoints.
-			
-			//TODO - what repaint???!!!!!
+			// Repaint correct position of the draggable endpoints.			
 			provVis.jsPlumb.repaintEverything();
 		}
 		/**
@@ -549,8 +547,6 @@ function ProvVisGraph(provVis) {
 					for ( var x in ed) {
 						var edge = ed[x];
 						var range = edge.toAllValuesFrom;
-						// TODO list all the nodes and check the range and the
-						// type of the node.
 						for ( var y in provVis.core.graph) {
 							var obj = provVis.core.graph[y];
 							// Skip the actual object
