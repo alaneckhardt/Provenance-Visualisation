@@ -1,4 +1,9 @@
-function ProvVisEdit(provVis){
+/**
+ * 
+ * @author Alan Eckhardt
+ * @param provVis
+ * @returns
+ */function ProvVisEdit(provVis){
 	this.provVis = provVis;
 	this.disabledTypes = [];
 	this.enableEditing = function(data){

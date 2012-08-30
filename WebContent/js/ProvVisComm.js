@@ -1,5 +1,6 @@
 /**
  * Class performing communication with provenance service.
+ * @author Alan Eckhardt
  */
 function ProvVisComm(provVis) {
 	this.provVis = provVis;

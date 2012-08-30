@@ -1,6 +1,7 @@
 /**
  * Class for layouting the graph.
  * @param provVis
+ * @author Alan Eckhardt
  * @returns
  */
 function ProvVisLayout(provVis) {

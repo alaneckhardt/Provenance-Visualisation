@@ -1,5 +1,6 @@
 /**
  * 
+ * @author Alan Eckhardt
  * @returns {ProvVisGraph}
  */
 function ProvVisGraph(provVis) {

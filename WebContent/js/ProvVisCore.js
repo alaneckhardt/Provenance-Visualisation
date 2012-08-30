@@ -1,5 +1,6 @@
 /**
  * This is a class representing a node.
+ * @author Alan Eckhardt
  */
 function Node() {
 		/**Uri of the edge*/
@@ -18,6 +19,7 @@ function Node() {
 }
 /**
  * This is a class representing an edge.
+ * @author Alan Eckhardt
  */
 function Edge() {
     	/**URI of the edge*/
@@ -31,7 +33,10 @@ function Edge() {
 	    /**Text to display*/
 	    this.typetext = null;
 }
-
+/**
+ * 
+ * @author Alan Eckhardt
+ */
 function EdgeType() {
 	/**Uri of the edge*/
 	this.idEdge = null;
@@ -44,6 +49,12 @@ function EdgeType() {
 }
 var server = '/ProvenanceService/';
 var serverVisual = '/ProvenanceService/';
+/**
+ * 
+ * @author Alan Eckhardt
+ * @param provVis
+ * @returns
+ */
 function ProvVisCore(provVis) {
 	this.provVis = provVis;
 	this.conf = {

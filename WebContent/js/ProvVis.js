@@ -6,6 +6,7 @@
 	
 /**
  * Class for provenance visualisation. 
+ * @author Alan Eckhardt
  * @returns
  */
 function ProvVis() {
