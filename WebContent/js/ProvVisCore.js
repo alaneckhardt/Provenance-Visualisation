@@ -219,9 +219,49 @@ function ProvVisCore(provVis) {
 			node2.adjacencies.push(edge);
 		}
 	};
+	this.parseJSONGraph = function(data){
 
+		// Trim the data.
+		data = data.replace(/^\s+|\s+$/g, '');
+		var graph = eval('(' + data + ')');
+		//Merging the nodes
+		for ( var x in graph) {
+			var node = graph[x];
+			provVis.core.addNode(node);
+		}
+		//Merging the edges
+		for (x in graph) {
+			var node = graph[x];
+			for ( var y in node.adjacencies) {
+				var adj = node.adjacencies[y];
+				provVis.core.addEdge(adj, adj.to);
+				provVis.core.addEdge(adj, adj.from);
+			}
+
+			for ( var y in node.adjacencies) {
+				var adj = node.adjacencies[y];
+				provVis.graph.displayRelationship2(adj);
+			}
+		}
+		provVis.graph.shrinkEdges();
+		provVis.jsPlumb.repaintEverything();
+
+		$('.info').hover(function() {
+			$(this).css('cursor', 'pointer');
+		}, function() {
+			$(this).css('cursor', 'auto');
+		});
+		$('.trigger').hover(function() {
+			$(this).css('cursor', 'pointer');
+		}, function() {
+			$(this).css('cursor', 'auto');
+		});
+
+		if(typeof initProvDisplay != 'undefine')
+			initProvDisplay();
+	}
 	this.loadProvenance = function(res, sessionId) {
-		//TODO - use prov service instead.
+		//TODO - use prov service instead of the jsp file.
 		jQuery.ajaxSetup({
 			async : false
 		});
@@ -231,45 +271,7 @@ function ProvVisCore(provVis) {
 			query += "&sessionId=" + escape(sessionId);
 		var provVistmp = provVis;
 		provVis = this.provVis;
-		$.get(query, function(data) {
-			// Trim the data.
-			data = data.replace(/^\s+|\s+$/g, '');
-			var graph = eval('(' + data + ')');
-			// TODO - merge the edges!!!!
-			for ( var x in graph) {
-				var node = graph[x];
-				provVis.core.addNode(node);
-			}
-			for (x in graph) {
-				var node = graph[x];
-				for ( var y in node.adjacencies) {
-					var adj = node.adjacencies[y];
-					provVis.core.addEdge(adj, adj.to);
-					provVis.core.addEdge(adj, adj.from);
-				}
-
-				for ( var y in node.adjacencies) {
-					var adj = node.adjacencies[y];
-					provVis.graph.displayRelationship2(adj);
-				}
-			}
-			provVis.graph.shrinkEdges();
-			provVis.jsPlumb.repaintEverything();
-
-			$('.info').hover(function() {
-				$(this).css('cursor', 'pointer');
-			}, function() {
-				$(this).css('cursor', 'auto');
-			});
-			$('.trigger').hover(function() {
-				$(this).css('cursor', 'pointer');
-			}, function() {
-				$(this).css('cursor', 'auto');
-			});
-
-			if(typeof initProvDisplay != 'undefine')
-				initProvDisplay();
-		});
+		$.get(query, this.parseJSONGraph);
 		provVis = provVistmp;
 		jQuery.ajaxSetup({
 			async : true
