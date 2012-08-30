@@ -1,0 +1,311 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Provenance Visualisation demo</title>
+<link rel="stylesheet" type="text/css" href="/ourspaces/style.css" />
+<link rel="stylesheet" type="text/css" href="/ourspaces/css/imageFrame.css"  />
+<link rel="stylesheet" type="text/css" href="/ourspaces/facebox.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="/ourspaces/inettuts.css" />
+<link rel="stylesheet" type="text/css" type="/ourspaces/text/css" href="/ourspaces/css/custom-theme/jquery-ui-1.8.12.custom.css"  />
+<link rel="stylesheet" type="text/css" href="/ourspaces/skins/tango/skin.css" />
+<link rel="stylesheet" type="text/css" href="/ourspaces/javascript/jquery.treeview.css" />
+<link rel="stylesheet" type="text/css" href="/ourspaces/css/chat.css" media="all" />
+<link rel="stylesheet" type="text/css" href="/ourspaces/css/screen.css" media="all" />
+
+<link rel="stylesheet" type="text/css" href="/ourspaces/css/jquery.ui.ourSpacesTagging.css" media="all" />
+
+
+<!--[if lte IE 7]>
+<link type="text/css" rel="stylesheet" media="all" href="/ourspaces/css/screen_ie.css" />
+<![endif]-->  
+
+
+<script type="text/javascript" src="/ourspaces/javascript/jquery-1.6.2.min.js"></script> 
+<script type="text/javascript" src="/ourspaces/javascript/jquery-ui-1.8.16.custom.min.js"></script>
+<script type="text/javascript" src="/ourspaces/javascript/jquery.simpletip-1.3.1.min.js"></script>
+<script type="text/javascript" src="/ourspaces/javascript/jquery.qtip-1.0.0-rc3.min.js"></script> 
+<script type="text/javascript" src="/ourspaces/javascript/jquery.treeview.js"></script>
+
+
+
+<!-- Autocomplete -->
+<link rel="stylesheet" type="text/css" href="/ourspaces/css/autocomplete/autocomplete.css " media="all" />
+    
+    
+<!-- CSS Files -->
+<link type="text/css"	href="/ProvenanceService/css/JsPlumb.css" rel="stylesheet" />
+<link type="text/css"	href="/ProvenanceService/css/ForceDirected.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="./css/jquery.treeview.css" />
+<!-- Custom files -->
+
+<script type="text/javascript"	src="/ProvenanceService/js/jquery.jsPlumb-1.3.3-all.js"></script>
+<script type="text/javascript"	src="/ProvenanceService/js/seedrandom.js"></script>
+<script type="text/javascript"	src="/ProvenanceService/js/init.js"></script>
+<script type="text/javascript"	src="/ProvenanceService/js/ProvVisGraph.js"></script>
+<script type="text/javascript"	src="/ProvenanceService/js/ProvVisComm.js"></script>
+<script type="text/javascript"	src="/ProvenanceService/js/ProvVisLayout.js"></script>
+<script type="text/javascript"	src="/ProvenanceService/js/ProvVisCore.js"></script>
+<script type="text/javascript"	src="/ProvenanceService/js/ProvVisEdit.js"></script>
+<script type="text/javascript"	src="/ProvenanceService/js/ProvVis.js"></script>
+
+</head>
+<body style="width:595px; margin: 0 auto;">
+<h1>Demo for <a href="https://github.com/alaneckhardt/Provenance-Visualisation">provenance visualisation</a>
+</h1>
+<br/><br/>
+<script>
+	provVis.core.graph = [];
+	provVis.graph.provenanceEditable = false;	
+	provVis.jsPlumb.width = 495, provVis.jsPlumb.height = 165, provVis.jsPlumb.offsetX=700, provVis.jsPlumb.offsetY=700;
+	provVis.jsPlumb.canvas = "infovis";
+	
+	/**
+	 * Logs given things into database. 
+	 * @param table name of the table, where the things should be inserted.
+	 * @param insert comma separated list of values. The string will be inserted as such into SQL INSERT statement.
+	 */
+	function log(table, insert){
+		$.ajax({
+	        type: "post",
+	        cache: false,
+	        url: "/ourspaces/LoggerSearch",
+	        data: {table:table, insert:insert}
+	    });
+	}
+	function initProvDisplay(){
+		function getNodeTimestamp(node){
+			for (var j=0;j<node.properties.length;j++){
+		        var prop = node.properties[j];
+		    	if("http://www.policygrid.org/ourspacesVRE.owl#timestamp"!=prop.name)
+		    		continue;
+		        return 1.0*prop.value;
+		    }
+			return null;
+		}    	
+		//Emphasize main artifact
+		$("#"+provVis.core.getLocalName(artifactId)).addClass("focused");//css("border","3px solid black").css("opacity","1");
+		//$("#"+getLocalName(artifactId)+" p").css("font-weight","bold");    
+		//Do the nlg for icons.
+		$(".icon").each(function(){
+			var item=this;
+			//Check if the NLG is already bound
+
+			if(typeof $(this).data("events") != "undefined"
+				&& typeof $(this).data("events").mouseover != "undefined"
+				&& $(this).data("events").mouseover.length >= 1){
+				for(var x in $(this).data("events").mouseover){
+					if($(this).data("events").mouseover[x].namespace.substring(0,4)=="qtip")
+						return;
+				}
+			}
+			   $(this).qtip({
+		  	    content: {
+			      url: '/ourspaces/LiberRestServlet', 
+			      data: { resourceID: $(this).attr("rel") },
+			      method: 'get'
+			   },
+			   hide: {
+		           fixed: true // Make it fixed so it can be hovered over
+		        },
+		       position: { adjust: { x: -10, y: -10 } },
+			   style: {
+		           padding: '10px', // Give it some extra padding
+		           //name: 'cream',
+		           tip: { color: 'black' } 
+		        }
+			});
+		});
+
+		$(".shape").unbind('click.log');
+		$(".shape").bind('click.log', function(){
+			if(typeof clickedGraph == 'undefined'){
+				clickedGraph = true;
+				log('log_graphVis(userid,resid, page, actiontype)',userID+',\''+$(this).attr("data-id")+'\',\''+document.URL+'\',\'click\'');
+			}
+			return true;
+		});
+		$(".shape .trigger").unbind('click.log');
+		$(".shape .trigger").bind('click.log', function(){
+			log('log_graphVis(userid,resid, page, actiontype)',userID+',\''+$(this.parentNode).attr("data-id")+'\',\''+document.URL+'\',\'expand\'');		
+			return true;
+		});
+		$(".shape .info").unbind('click.log');
+		$(".shape .info").bind('click.log', function(){
+			log('log_graphVis(userid,resid, page, actiontype)',userID+',\''+$(this.parentNode).attr("data-id")+'\',\''+document.URL+'\',\'info\'');		
+			return true;
+		});
+		
+		
+		$(".shape").draggable({
+			start: function(event, ui) { 
+					if(typeof draggedGraph == 'undefined'){
+						draggedGraph = true;
+						log('log_graphVis(userid,resid, page, actiontype)',userID+',\''+$(this).attr("data-id")+'\',\''+document.URL+'\',\'drag\'');
+					}
+					return true;
+			   }
+		});
+		$(".center-container").hover(function(){
+			if(typeof logShow == 'undefined'){
+				logShow = true;
+				log('log_graphVis(userid,resid, page, actiontype)',userID+',\'\',\''+document.URL+'\',\'demo\'');
+			}		
+		});
+	}
+	artifactId = 'http://openprovenance.org/ontology#a6949315-c161-4978-bdf0-46e29e528997';
+	userID = -17800;
+	</script>
+	<div style="border: 1px solid black;float: left;margin: 0 auto;">
+		<jsp:include page="../testProvenance/provenanceOne.jsp" flush="false">
+			<jsp:param value="http://openprovenance.org/ontology#a6949315-c161-4978-bdf0-46e29e528997" name="resource"/>
+			<jsp:param value="false" name="editable"/>
+		</jsp:include>
+	</div>	
+<!-- CSS Files -->
+<link type="text/css"	href="/ProvenanceService/css/JsPlumb.css" rel="stylesheet" />
+<link type="text/css"	href="/ProvenanceService/css/ForceDirected.css" rel="stylesheet" />
+<!-- <link type="text/css"	href="./css/ui-lightness/jquery-ui-1.8.16.custom.css" rel="stylesheet" />-->
+
+<!-- <script type="text/javascript"	src="/ProvenanceService/js/jquery-1.6.2.min.js"></script>
+<script type="text/javascript"	src="/ProvenanceService/js/jquery.qtip-1.0.0-rc3.min.js"></script>-->
+<script type="text/javascript"	src="/ProvenanceService/js/jquery.jsPlumb-1.3.3-all.js"></script>
+
+<!-- Custom files -->
+<!--
+<script type="text/javascript"	src="/ProvenanceService/js/seedrandom.js"></script>
+<script type="text/javascript"	src="/ProvenanceService/js/init.js"></script>
+<script type="text/javascript"	src="/ProvenanceService/js/graphOperations.js"></script>
+<script type="text/javascript"	src="/ProvenanceService/js/customJsPlumb.js"></script>
+<script type="text/javascript"	src="/ProvenanceService/js/customJsPlumbSpring.js"></script>
+-->
+<script type="text/javascript"	src="/ProvenanceService/js/seedrandom.js"></script>
+<script type="text/javascript"	src="/ProvenanceService/js/ProvVisGraph.js"></script>
+<script type="text/javascript"	src="/ProvenanceService/js/ProvVisComm.js"></script>
+<script type="text/javascript"	src="/ProvenanceService/js/ProvVisLayout.js"></script>
+<script type="text/javascript"	src="/ProvenanceService/js/ProvVisCore.js"></script>
+<script type="text/javascript"	src="/ProvenanceService/js/ProvVisEdit.js"></script>
+<script type="text/javascript"	src="/ProvenanceService/js/ProvVis.js"></script>
+
+
+<script type="text/javascript"  src="/ProvenanceService/js/jquery-ui-1.8.16.custom.min.js"></script>
+
+<!-- <script type="text/javascript" src="/ourspaces/javascript/top.js"></script> -->
+
+<script>
+
+	var superclasses = new Object();
+	var subclasses = new Object();
+
+	function loadSuperclasses(){
+	}
+
+	function loadProperties(){
+	}
+
+	
+	
+	
+	function enlargeProvenance(){
+		var newEl = $("<div>");
+		newEl.attr("id","dialogProvenance");
+		newEl.appendTo('body');
+		//Pull the provenance to the dialog
+		var content = $('#provenance1').detach();
+		content.appendTo('#dialogProvenance');
+		$(".center-container").css("width","100%");
+		$(".center-container").css("height","95%");
+		$( "#dialogProvenance" ).dialog({
+			width: 946,
+			height: 600,
+			modal: true,
+			open: function(event, ui) { 
+				provVis1.jsPlumb.width = $(".center-container").width()-115, 
+				provVis1.jsPlumb.height = $(".center-container").height()-40;
+				layout();
+			},
+			//Push the provenance back to place.
+			close: function(event, ui) { 	
+				var content = $('#provenance1').detach();
+				content.prependTo('#provenanceResource');
+				$(".center-container").width($("#provenanceResource").width());
+				var height = $("#provenanceResource").height()-34;
+				$(".center-container").css("height",height+"px");
+				//$(".center-container").css("width","100%");
+				//$(".center-container").css("height","100%");
+				provVis1.jsPlumb.width = $(".center-container").width()-25;
+				provVis1.jsPlumb.height = $(".center-container").height()-40;
+				content.css("z-index","1");
+				$( "#dialogProvenance" ).remove();
+				provVis1.layout.layout();
+
+				//provVis1.jsPlumb.width = $(".center-container").width()-30, 
+				//provVis1.jsPlumb.height = $(".center-container").height()-30;
+			}
+		});
+	}
+	
+	$(document).ready(function() {		
+		provVis1 = provVis.getProvVis();
+		provVis1.core.graph = [];
+		provVis1.graph.provenanceEditable = false;
+		provVis1.jsPlumb.width = 495, provVis1.jsPlumb.height = 165, provVis1.jsPlumb.offsetX=1000, provVis1.jsPlumb.offsetY=1000;
+		provVis1.jsPlumb.canvas = "infovis1";
+		$(".center-container").width($("#provenanceResource").width());
+		var height = $("#provenanceResource").height()-34;/*-$("#controls").height()*/
+		$(".center-container").height(height);
+		//$("#provenance1").css("width","100%");
+		//$("#provenance1").css("height","100%");
+		
+		provVis1.jsPlumb.width = $(".center-container").width()-25, 
+		provVis1.jsPlumb.height = $(".center-container").height()-40;
+		loadProperties();	
+		   //Now fill the subclasses.
+		   var x,y;
+		   for(x in superclasses){
+			   var subclass = x;
+			   var xsuperclasses = superclasses[x];
+			   for(y in superclasses){
+				   var superclass = y;
+				   if(subclasses[y] == null){
+					   subclasses[y] = [];
+				   }
+				   subclasses[y].push(x);
+			   }
+		   }
+		   
+	//Load the resource and nearest neighbourhood.
+		//server = '/ourspaces/testProvenance/';
+		serverVisual = '/ourspaces/testProvenance/';
+		provVis1.core.initJsPlumb();
+		//provVis1.core.loadProvenance('http://openprovenance.org/ontology#a6949315-c161-4978-bdf0-46e29e528997');
+
+		provVis1.core.parseJSONGraph('[{"title":"Interview of Alan Eckhardt","id":"http://openprovenance.org/ontology#a6949315-c161-4978-bdf0-46e29e528997","fullType":"http://www.policygrid.org/provenance-generic.owl#DataCollection","basicType":"Process","adjacencies":[{"id":"http://www.policygrid.org/ourspacesVRE.owl#fb966cc8-93fd-4277-89aa-6f1bd241cf10","to":"http://xmlns.com/foaf/0.1/#e3c20fb2-aed3-442d-a198-931e67e6cbc2","from":"http://openprovenance.org/ontology#a6949315-c161-4978-bdf0-46e29e528997","type":"http://openprovenance.org/ontology#WasControlledBy","typeText":"WasControlledBy","properties":[{"name":"class","value":"system"}]},{"id":"http://www.policygrid.org/ourspacesVRE.owl#f9f7ee23-6105-4c32-b0ef-1d777f530ce0","to":"http://xmlns.com/foaf/0.1/#0c8d01df-1d7a-4a2c-8298-b5e6fbb1aa9c","from":"http://openprovenance.org/ontology#a6949315-c161-4978-bdf0-46e29e528997","type":"http://openprovenance.org/ontology#WasControlledBy","typeText":"WasControlledBy","properties":[{"name":"class","value":"system"}]},{"id":"http://www.policygrid.org/ourspacesVRE.owl#d52e7c43-55b0-418c-9123-6e57997182d7","to":"http://openprovenance.org/ontology#9e3dff8b-9e93-4057-869d-213ee4f3b14f","from":"http://openprovenance.org/ontology#a6949315-c161-4978-bdf0-46e29e528997","type":"http://openprovenance.org/ontology#Used","typeText":"Used","properties":[{"name":"class","value":"system"}]},{"id":"http://www.policygrid.org/ourspacesVRE.owl#42b202b3-8869-4444-bdf0-11aeccdfba77","to":"http://xmlns.com/foaf/0.1/#2af78022-8e4e-4c5b-95d5-bef4fe7299d9","from":"http://openprovenance.org/ontology#a6949315-c161-4978-bdf0-46e29e528997","type":"http://www.policygrid.org/ourspacesVRE.owl#Involved","typeText":"Involved","properties":[{"name":"class","value":"system"}]},{"id":"http://www.policygrid.org/ourspacesVRE.owl#5c649b81-e449-481d-b257-0cc785c05f1a","to":"http://openprovenance.org/ontology#a6949315-c161-4978-bdf0-46e29e528997","from":"http://openprovenance.org/ontology#c4fe2eb9-8956-442c-b548-6ce7e51e92be","type":"http://openprovenance.org/ontology#WasGeneratedBy","typeText":"WasGeneratedBy","properties":[{"name":"class","value":"system"}]}],"properties":[{"name":"http://www.policygrid.org/ourspacesVRE.owl#timestamp","value":"1340971293168"}]},{"title":"Pete Edwards","id":"http://xmlns.com/foaf/0.1/#e3c20fb2-aed3-442d-a198-931e67e6cbc2","fullType":"http://xmlns.com/foaf/0.1/Person","basicType":"Agent","adjacencies":[{"id":"http://www.policygrid.org/ourspacesVRE.owl#fb966cc8-93fd-4277-89aa-6f1bd241cf10","to":"http://xmlns.com/foaf/0.1/#e3c20fb2-aed3-442d-a198-931e67e6cbc2","from":"http://openprovenance.org/ontology#a6949315-c161-4978-bdf0-46e29e528997","type":"http://openprovenance.org/ontology#WasControlledBy","typeText":"WasControlledBy","properties":[{"name":"class","value":"system"}]}],"properties":[]},{"title":"Edoardo Pignotti","id":"http://xmlns.com/foaf/0.1/#0c8d01df-1d7a-4a2c-8298-b5e6fbb1aa9c","fullType":"http://xmlns.com/foaf/0.1/Person","basicType":"Agent","adjacencies":[{"id":"http://www.policygrid.org/ourspacesVRE.owl#f9f7ee23-6105-4c32-b0ef-1d777f530ce0","to":"http://xmlns.com/foaf/0.1/#0c8d01df-1d7a-4a2c-8298-b5e6fbb1aa9c","from":"http://openprovenance.org/ontology#a6949315-c161-4978-bdf0-46e29e528997","type":"http://openprovenance.org/ontology#WasControlledBy","typeText":"WasControlledBy","properties":[{"name":"class","value":"system"}]}],"properties":[]},{"title":"focus group data","id":"http://openprovenance.org/ontology#9e3dff8b-9e93-4057-869d-213ee4f3b14f","fullType":"http://www.policygrid.org/provenance-generic.owl#Data","basicType":"Artifact","adjacencies":[{"id":"http://www.policygrid.org/ourspacesVRE.owl#d52e7c43-55b0-418c-9123-6e57997182d7","to":"http://openprovenance.org/ontology#9e3dff8b-9e93-4057-869d-213ee4f3b14f","from":"http://openprovenance.org/ontology#a6949315-c161-4978-bdf0-46e29e528997","type":"http://openprovenance.org/ontology#Used","typeText":"Used","properties":[{"name":"class","value":"system"}]}],"properties":[{"name":"http://www.policygrid.org/ourspacesVRE.owl#timestamp","value":"1330626459342"}]},{"title":"Alan Eckhardt","id":"http://xmlns.com/foaf/0.1/#2af78022-8e4e-4c5b-95d5-bef4fe7299d9","fullType":"http://xmlns.com/foaf/0.1/Person","basicType":"Agent","adjacencies":[{"id":"http://www.policygrid.org/ourspacesVRE.owl#42b202b3-8869-4444-bdf0-11aeccdfba77","to":"http://xmlns.com/foaf/0.1/#2af78022-8e4e-4c5b-95d5-bef4fe7299d9","from":"http://openprovenance.org/ontology#a6949315-c161-4978-bdf0-46e29e528997","type":"http://www.policygrid.org/ourspacesVRE.owl#Involved","typeText":"Involved","properties":[{"name":"class","value":"system"}]}],"properties":[]},{"title":"Recording of interview with Alan Eckhardt","id":"http://openprovenance.org/ontology#c4fe2eb9-8956-442c-b548-6ce7e51e92be","fullType":"http://www.policygrid.org/provenance-generic.owl#Audio","basicType":"Artifact","adjacencies":[{"id":"http://www.policygrid.org/ourspacesVRE.owl#5c649b81-e449-481d-b257-0cc785c05f1a","to":"http://openprovenance.org/ontology#a6949315-c161-4978-bdf0-46e29e528997","from":"http://openprovenance.org/ontology#c4fe2eb9-8956-442c-b548-6ce7e51e92be","type":"http://openprovenance.org/ontology#WasGeneratedBy","typeText":"WasGeneratedBy","properties":[{"name":"class","value":"system"}]}],"properties":[{"name":"http://www.policygrid.org/ourspacesVRE.owl#timestamp","value":"1341398093298"}]}]');
+		$(".center-container").width($("#provenanceResource").width());
+		var height = $("#provenanceResource").height()-34;
+		$(".center-container").css("height",height+"px");
+		//$("#provenance1").css("width","100%");
+		//$("#provenance1").css("height","100%");
+		
+		provVis1.jsPlumb.width = $(".center-container").width()-25, 
+		provVis1.jsPlumb.height = $(".center-container").height()-40;
+		$("#infovis1").attr("provVisIndex", provVis1.index);
+		provVis1.layout.layout();
+		});
+	</script>
+<div  style="float:left; width: 100%; height: 100%;" id="provenance1">
+	
+	
+	<div class="center-container">
+		<div id="infovis1"  class="infovis"></div>
+	</div>
+	
+	<div class="controls" style="background-color: #222222;float: left; width: 100%;">
+							<a class="enlarge" style="float:left" title="Show provenance in a larger window" href="#" onclick="enlargeProvenance();return false;"><img src="/ourspaces/icons/001_38.png" style="border:0;margin:5px;"></img></a>
+							<a class="timestampLayout" style="float:left" title="Layout according to time" href="#" onclick="provVis1.layout.layout();return false;"><img src="/ourspaces/icons/001_60.png" style="border:0;margin:5px;"></img></a>
+							<a class="springLayout" style="float:left" title="Dynamic layout" href="#" onclick="provVis1.layout.layoutSpring();provVis1.layout.resize();return false;"><img src="/ourspaces/icons/001_61.png" style="border:0;margin:5px;"></img></a>
+							<a class="hideShow" style="float:left" title="Hide/Show selected nodes" href="#" onclick="provVis1.graph.switchVisibility();if($(this).children('img').attr('src')=='/ourspaces/icons/001_04.png') {$(this).children('img').attr('src','/ourspaces/icons/001_03.png');return false;} else {$(this).children('img').attr('src','/ourspaces/icons/001_04.png');return false;}"><img src="/ourspaces/icons/001_04.png" style="border:0;margin:5px;"></img></a>
+						</div>
+</div>
+	
+</body>
+</html>
